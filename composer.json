@@ -1,0 +1,42 @@
+{
+    "name":"netzmacht/contao-bootstrap-grid",
+    "description":"Provides an backend widget for choosing icons of an icon font",
+    "keywords":["icons", "widget", "wizard", "contao", "dca"],
+    "type":"contao-module",
+    "homepage":"http://netzmacht.de/erweiterungen/frontend/spaltenseteditor/",
+    "license":"LGPL-3.0+",
+    "authors":[
+        {
+            "name":"David Molineus",
+            "email":"mail@netzmacht.de",
+            "homepage":"http://www.netzmacht.de",
+            "role":"Project leader"
+        }
+    ],
+    "support":{
+        "email":"mail@netzmacht.de",
+        "issues":"https://github.com/contao-bootstrap/grid/issues",
+        "wiki": "http://netzmacht.de/erweiterungen/frontend/spaltenseteditor",
+        "source":"https://github.com/contao-bootstrap/grid"
+    },
+    "require":{
+        "php":">=5.3",
+        "contao/core":">=3.2,<3.4"
+    },
+    "autoload":{
+        "psr-4": { "Netzmacht\\Bootstrap\\Grid\\": "src/" }
+    },
+    "replace": {
+        "contao-legacy/subcolumns_bootstrap_customize" : "*"
+    },
+    "extra":{
+        "contao": {
+            "symlinks":{
+                "module": "src/system/modules/bootstrap-grid"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
