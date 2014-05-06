@@ -31,7 +31,7 @@
     },
     "extra":{
         "contao": {
-            "symlinks":{
+            "sources":{
                 "module": "src/system/modules/bootstrap-grid"
             }
         },
