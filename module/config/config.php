@@ -17,7 +17,7 @@
  * backend modules
  */
 $GLOBALS['BE_MOD']['design']['columnset'] = array(
-	'icon' => 'system/modules/subcolumns_bootstrap_customizable/assets/icon.png',
+	'icon' => 'system/modules/bootstrap-grid/assets/icon.png',
 	'tables' => array('tl_columnset'),
 );
 

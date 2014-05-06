@@ -25,7 +25,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
 		'enableVersioning'            => true,
 		'onload_callback'             => array
 		(
-			array('Netzmacht\\ColumnSet\\ColumnSet', 'appendColumnSizesToPalette')
+			array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'appendColumnSizesToPalette')
 		),
 		'sql' => array
 		(
@@ -191,7 +191,7 @@ $colSetTemplate = array
 	'inputType'               => 'multiColumnWizard',
 	'load_callback'           => array
 	(
-		array('Netzmacht\\ColumnSet\\ColumnSet', 'createColumns')
+		array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'createColumns')
 	),
 	'eval'                    => array
 	(

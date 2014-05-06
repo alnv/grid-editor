@@ -6,7 +6,7 @@
  * Time: 11:52
  */
 
-namespace Netzmacht\Bootstrap\Grid\GridBuilder;
+namespace Netzmacht\Bootstrap\Grid\Builder;
 
 
 use Netzmacht\Bootstrap\Grid\Grid;
@@ -37,6 +37,16 @@ class GridBuilder
 		$this->columns[] = $column;
 
 		return $column;
+	}
+
+
+	/**
+	 * @param $index
+	 * @return Column
+	 */
+	public function getColumn($index)
+	{
+		return $this->columns[$index];
 	}
 
 

@@ -5,10 +5,15 @@
  */
 //$GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] = array('Netzmacht\\ColumnSet\\ColumnSet', 'appendColumnsetIdToPalette');
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['semantic_html5'] = str_replace(
-	'sh5_additional',
-	'sh5_additional,bootstrap_isGridRow,bootstrap_isGridColumn',
-	$GLOBALS['TL_DCA']['tl_content']['palettes']['semantic_html5']
+//
+if(\Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5::isActive()) {
+	$GLOBALS['TL_DCA']['tl_content']['config']['palettes_callback'][] =
+		array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'callbackGeneratePalette');
+}
+
+$GLOBALS['TL_DCA']['tl_content']['metasubselectpalettes']['bootstrap_isGridElement'] = array(
+	'row'    => array('bootstrap_grid'),
+	'column' => array('bootstrap_gridRow'),
 );
 
 
@@ -18,25 +23,45 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['semantic_html5'] = str_replace(
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_type']['options_callback'] = array('Netzmacht\\ColumnSet\\ColumnSet', 'getAllTypes');
 $GLOBALS['TL_DCA']['tl_content']['fields']['sc_type']['eval']['submitOnChange'] = true;
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['columnset_id'] = array
+$GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_grid'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['columnset_id'],
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_grid'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	//'options_callback'        => array('Netzmacht\\ColumnSet\\ColumnSet', 'getAllColumnsets'),
+	'options_callback'        => array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'getGrids'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
+	'eval'                    => array(
+		'mandatory' => true,
+		'submitOnChange' => true,
+		'tl_class' => 'w50'
+	),
 	'sql'                     => "varchar(10) NOT NULL default ''"
 );
 
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_isGridRow'] = array
+$GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_gridRow'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_isGridRow'],
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_gridRow'],
 	'exclude'                 => true,
-	'inputType'               => 'checkbox',
-	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'inputType'               => 'select',
+	'options_callback'        => array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'getGridElements'),
+	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'w50'),
+	'sql'                     => "varchar(10) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_isGridElement'] = array
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_isGridElement'],
+	'exclude'                 => true,
+	'inputType'               => 'select',
+	'options'                 => array('row', 'column'),
+	'reference'               => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_gridElements'],
+	'eval'                    => array(
+		'submitOnChange' => true,
+		'tl_class' => 'clr w50',
+		'includeBlankOption' => true,
+	),
+	'sql'                     => "varchar(8) NOT NULL default ''"
 );
 
 
@@ -45,6 +70,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_isGridColumn'] = array
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_isGridColumn'],
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
+	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'w50'),
 	'sql'                     => "char(1) NOT NULL default ''"
 );

@@ -9,7 +9,7 @@
 namespace Netzmacht\Bootstrap\Grid;
 
 
-use Netzmacht\Bootstrap\Grid\GridBuilder\GridBuilder;
+use Netzmacht\Bootstrap\Grid\Builder\GridBuilder;
 
 class Grid
 {
@@ -27,7 +27,7 @@ class Grid
 	/**
 	 * @param $columns
 	 */
-	function __construct(array $columns)
+	function __construct(array $columns=array())
 	{
 		foreach($columns as $column) {
 			$this->addColumn($column);
@@ -66,7 +66,7 @@ class Grid
 				$key    = 'columnset_' . $size;
 				$values = deserialize($result->$key, true);
 
-				$column->forDevice($size, $values['width'], $values['offset'] ?: null, $values['push'] ?: null);
+				$column->forDevice($size, $values[$i]['width'], $values[$i]['offset'] ?: null, $values[$i]['order'] ?: null);
 			}
 		}
 

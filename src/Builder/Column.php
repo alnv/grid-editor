@@ -1,6 +1,6 @@
 <?php
 
-namespace Netzmacht\Bootstrap\Grid\GridBuilder;
+namespace Netzmacht\Bootstrap\Grid\Builder;
 
 
 class Column
