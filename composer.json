@@ -26,8 +26,13 @@
     "autoload":{
         "psr-4": { "Netzmacht\\Bootstrap\\Grid\\": "src/" }
     },
+    "suggest": {
+        "menatwork/semantic_html5": "Integrate grid columns using semantic_html5",
+        "felixpfeiffer/subcolumns": "Integrate grid columns using subcolumns"
+    },
     "replace": {
-        "contao-legacy/subcolumns_bootstrap_customize" : "*"
+        "contao-legacy/subcolumns_bootstrap_customize" : "*",
+        "netzmacht/contao-boostrap-columnseteditor": "*",
     },
     "extra":{
         "contao": {
