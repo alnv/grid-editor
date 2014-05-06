@@ -13,24 +13,22 @@
  **/
 
 
-/**
- * backend modules
- */
+// backend modukle
 $GLOBALS['BE_MOD']['design']['columnset'] = array(
 	'icon' => 'system/modules/bootstrap-grid/assets/icon.png',
 	'tables' => array('tl_columnset'),
 );
 
 
-/**
- * hooks
- */
+// hooks
 \Netzmacht\Bootstrap\Grid\Integration\Subcolumns::setUp();
 \Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5::setUp();
 
-/**
- * Columset
- */
+
+//
+$GLOBALS['TL_WRAPPERS']['separator'][] = 'colsetPart';
+
+// subcolumns columnset definition
 $GLOBALS['TL_SUBCL']['bootstrap_customizable'] = array
 (
 	'label'		=> 'Bootstrap 3 (customizable)', // Label for the selectmenu

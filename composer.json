@@ -21,7 +21,8 @@
     },
     "require":{
         "php":">=5.3",
-        "contao/core":">=3.2,<3.4"
+        "contao/core":">=3.2,<3.4",
+        "contao-community-alliance/event-dispatcher": "~1.0"
     },
     "autoload":{
         "psr-4": { "Netzmacht\\Bootstrap\\Grid\\": "src/" }

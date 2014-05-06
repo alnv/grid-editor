@@ -9,6 +9,7 @@
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
 
+use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 use Netzmacht\Bootstrap\Grid\Grid;
 
 class SemanticHtml5
@@ -30,7 +31,8 @@ class SemanticHtml5
 	public static function setUp()
 	{
 		if(static::isActive()) {
-			$GLOBALS['TL_HOOKS']['parseTemplate'][] = array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'hookParseTemplate');
+			$GLOBALS['TL_HOOKS']['parseTemplate'][]      = array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'hookParseTemplate');
+			$GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = get_called_class() . '::getGrids';
 		}
 	}
 
@@ -41,6 +43,26 @@ class SemanticHtml5
 	public static function isActive()
 	{
 		return in_array('semantic_html5', \Config::getInstance()->getActiveModules());
+	}
+
+
+	/**
+	 * @param GetGridsEvent $event
+	 */
+	public static function getGrids(GetGridsEvent $event)
+	{
+		$model = $event->getModel();
+		$grids = $event->getGrids();
+
+		if($model->type == 'semantic_html5') {
+			$query   = 'SELECT * FROM tl_columnset WHERE published=1 ORDER BY title';
+			$result  = \Database::getInstance()->query($query);
+
+			while($result->next()) {
+				$key = sprintf($GLOBALS['TL_LANG']['tl_content']['bootstrap_columns'], $result->columns);
+				$grids[$key][$result->id] = $result->title;
+			}
+		}
 	}
 
 
@@ -93,24 +115,6 @@ class SemanticHtml5
 			}
 		}
 
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getGrids()
-	{
-		$grids  = array();
-		$result = \Database::getInstance()
-			->prepare('SELECT * FROM tl_columnset WHERE published=1 ORDER BY columns, title')
-			->execute();
-
-		while($result->next()) {
-			$key = sprintf($GLOBALS['TL_LANG']['tl_content']['bootstrap_columns'], $result->columns);
-			$grids[$key][$result->id] = $result->title;
-		}
-
-		return $grids;
 	}
 
 

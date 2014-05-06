@@ -1,6 +1,7 @@
 <?php
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
+use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 
 /**
  * Class ColumnSet provides helper methods for handling the data container and generating the dynamic column set
@@ -10,40 +11,6 @@ namespace Netzmacht\Bootstrap\Grid\DataContainer;
  */
 class ColumnSet extends \Backend
 {
-
-
-	/**
-	 * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
-	 * creates its palette dynamically
-	 *
-	 * @param $dc
-	 */
-	public function appendColumnsetIdToPalette($dc)
-	{
-		if($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-			return;
-		}
-
-		if($dc->table == 'tl_content') {
-			$model = \ContentModel::findByPK($dc->id);
-
-			if($model->sc_type > 0) {
-				\MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('columnset_id'));
-			}
-		} else {
-			$model = \ModuleModel::findByPk($dc->id);
-
-			if($model->sc_type > 0) {
-				if($model->sc_type > 0) {
-					$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns'] = str_replace(
-						'sc_type,',
-						'sc_type,columnset_id,',
-						$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns']
-					);
-				}
-			}
-		}
-	}
 
 
 	/**
@@ -132,22 +99,19 @@ class ColumnSet extends \Backend
 
 
 	/**
-	 * get all columnsets which fits to the selected type
-	 * @param $dc
 	 * @return array
 	 */
-	public function getAllColumnsets($dc)
+	public function getGrids($dc)
 	{
-		$collection = \ColumnsetModel::findBy('published=1 AND columns', $dc->activeRecord->sc_type, array('order' => 'title'));
-		$set        = array();
+		if($dc->activeRecord) {
+			$dispatcher = $GLOBALS['container']['event-dispatcher'];
+			$event      = new GetGridsEvent($dc->activeRecord);
+			$dispatcher->dispatch(GetGridsEvent::NAME, $event);
 
-		if($collection !== null) {
-			while($collection->next()) {
-				$set[$collection->id] = $collection->title;
-			}
+			return $event->getGrids()->getArrayCopy();
 		}
 
-		return $set;
+		return array();
 	}
 
 
