@@ -14,6 +14,41 @@ class ColumnSet extends \Backend
 
 
 	/**
+	 * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
+	 * creates its palette dynamically
+	 *
+	 * @param $dc
+	 */
+	public function appendColumnsetIdToPalette($dc)
+	{
+		if($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
+			return;
+		}
+
+		if($dc->table == 'tl_content') {
+			$model = \ContentModel::findByPK($dc->id);
+
+			if($model->sc_type > 0) {
+				\MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('columnset_id'));
+			}
+		}
+		else {
+			$model = \ModuleModel::findByPk($dc->id);
+
+			if($model->sc_type > 0) {
+				if($model->sc_type > 0) {
+					$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns'] = str_replace(
+						'sc_type,',
+						'sc_type,columnset_id,',
+						$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns']
+					);
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Append column sizes fields dynamically to the palettes. Not using
 	 * @param $dc
 	 */
