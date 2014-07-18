@@ -15,9 +15,9 @@
     ],
     "support":{
         "email":"mail@netzmacht.de",
-        "issues":"https://github.com/contao-bootstrap/grid/issues",
+        "issues":"https://github.com/contao-bootstrap/grid-editor/issues",
         "wiki": "http://netzmacht.de/erweiterungen/frontend/spaltenseteditor",
-        "source":"https://github.com/contao-bootstrap/grid"
+        "source":"https://github.com/contao-bootstrap/grid-editor"
     },
     "require":{
         "php":">=5.3",
