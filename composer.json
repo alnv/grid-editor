@@ -1,6 +1,6 @@
 {
     "name":"contao-bootstrap/grid-editor",
-    "description":"Provides an backend widget for choosing icons of an icon font",
+    "description":"Backend grid editor for Contao CMS",
     "keywords":["icons", "widget", "wizard", "contao", "dca"],
     "type":"contao-module",
     "homepage":"http://netzmacht.de/erweiterungen/frontend/spaltenseteditor/",
