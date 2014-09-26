@@ -21,8 +21,12 @@ $GLOBALS['BE_MOD']['design']['columnset'] = array(
 \Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5::setUp();
 
 
-//
+// add separator for colsetPart. It's missing by subcolumns
 $GLOBALS['TL_WRAPPERS']['separator'][] = 'colsetPart';
+
+if(!isset($GLOBALS['TL_CONFIG']['bootstrap_gridColumns'])) {
+    $GLOBALS['TL_CONFIG']['bootstrap_gridColumns'] = 12;
+}
 
 // subcolumns columnset definition
 $GLOBALS['TL_SUBCL']['bootstrap_customizable'] = array

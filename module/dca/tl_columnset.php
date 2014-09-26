@@ -149,7 +149,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
 			'flag'                    => 3,
 			'length'                  => 1,
 			'inputType'               => 'select',
-			'options'                 => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+			'options_callback'        => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_columnset'],
 			'eval'                    => array('submitOnChange' => true),
 			'sql'                     => "int(10) unsigned NOT NULL default '0'"
@@ -183,47 +183,42 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
 // defining col set fields
 $colSetTemplate = array
 (
-	'exclude'                 => true,
-	'inputType'               => 'multiColumnWizard',
-	'load_callback'           => array
-	(
-		array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'createColumns')
-	),
-	'eval'                    => array
-	(
-		'includeBlankOption' => true,
-		'columnFields'       => array
-		(
-			'width' => array
-			(
-				'label' => $GLOBALS['TL_LANG']['tl_columnset']['width'],
-				'inputType' => 'select',
-				'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-				'eval' => array('style' => 'width: 100px;'),
-			),
-
-			'offset' => array
-			(
-				'label' => $GLOBALS['TL_LANG']['tl_columnset']['offset'],
-				'inputType' => 'select',
-				'options' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-				'eval' => array('style' => 'width: 100px;', 'includeBlankOption' => true),
-			),
-
-			'order' => array
-			(
-				'label' => $GLOBALS['TL_LANG']['tl_columnset']['order'],
-				'inputType' => 'select',
-				'options' => array(
-					'push' => array('push-0', 'push-1', 'push-2', 'push-3', 'push-4', 'push-5', 'push-6', 'push-7', 'push-8', 'push-9', 'push-10', 'push-11', 'push-12'),
-					'pull' => array('pull-0', 'pull-1', 'pull-2', 'pull-3', 'pull-4', 'pull-5', 'pull-6', 'pull-7', 'pull-8', 'pull-9', 'pull-10', 'pull-11', 'pull-12'),
-				),
-				'eval' => array('style' => 'width: 160px;', 'includeBlankOption' => true),
-			),
-		),
-		'buttons'             => array('copy' => false, 'delete' => false),
-	),
-	'sql'                     => "blob NULL"
+    'exclude'       => true,
+    'inputType'     => 'multiColumnWizard',
+    'load_callback' => array
+    (
+        array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'createColumns')
+    ),
+    'eval'          => array
+    (
+        'includeBlankOption' => true,
+        'columnFields'       => array
+        (
+            'width'  => array
+            (
+                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['width'],
+                'inputType'        => 'select',
+                'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getWidths'),
+                'eval'             => array('style' => 'width: 100px;'),
+            ),
+            'offset' => array
+            (
+                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['offset'],
+                'inputType'        => 'select',
+                'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
+                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true),
+            ),
+            'order'  => array
+            (
+                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['order'],
+                'inputType'        => 'select',
+                'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnOrders'),
+                'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true),
+            ),
+        ),
+        'buttons'            => array('copy' => false, 'delete' => false),
+    ),
+    'sql'           => "blob NULL"
 );
 
 $colSetXsTemplate = $colSetTemplate;

@@ -1,6 +1,7 @@
 <?php
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
+use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 
 /**
@@ -81,11 +82,12 @@ class ColumnSet extends \Backend
 		$columns = (int)$mcw->activeRecord->columns;
 		$value   = deserialize($value, true);
 		$count   = count($value);
+        $total   = Bootstrap::getConfigVar('grid-editor.columns');
 
 		// initialize columns
 		if($count == 0) {
 			for($i = 0; $i < $columns; $i++) {
-				$value[$i]['width'] = floor(12 / $columns);
+				$value[$i]['width'] = floor($total / $columns);
 			}
 		} // reduce columns if necessary
 		elseif($count > $columns) {
@@ -97,7 +99,7 @@ class ColumnSet extends \Backend
 		} // make sure that column numbers has not changed
 		else {
 			for($i = 0; $i < ($columns - $count); $i++) {
-				$value[$i + $count]['width'] = floor(12 / $columns);
+				$value[$i + $count]['width'] = floor($total / $columns);
 			}
 		}
 
@@ -178,4 +180,45 @@ class ColumnSet extends \Backend
 
 		return $cols;
 	}
+
+
+    /**
+     * @return array
+     */
+    public function getColumnOrders()
+    {
+        $columns = Bootstrap::getConfigVar('grid-editor.columns');
+        $values  = array();
+
+        for($i = 0; $i <= $columns; $i++) {
+            $values['push'][] = 'push-' . $i;
+            $values['pull'][] = 'pull-' . $i;
+        }
+
+        return $values;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getWidths()
+    {
+        $columns = Bootstrap::getConfigVar('grid-editor.columns');
+        $values  = range(0, $columns);
+
+        return $values;
+    }
+
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        $columns = Bootstrap::getConfigVar('grid-editor.columns');
+        $values  = range(1, $columns);
+
+        return $values;
+    }
+
 }
