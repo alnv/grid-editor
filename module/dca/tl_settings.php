@@ -5,12 +5,16 @@
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['bootstrap_gridColumns'] = array
 (
-    'inputType' => 'text',
-    'label' => &$GLOBALS['TL_LANG']['tl_settings']['bootstrap_gridColumns'],
-    'default' => 12,
-    'eval' => array
+    'inputType'     => 'text',
+    'label'         => &$GLOBALS['TL_LANG']['tl_settings']['bootstrap_gridColumns'],
+    'default'       => 12,
+    'save_callback' => array
+    (
+        array('Netzmacht\Bootstrap\Grid\DataContainer\Settings', 'forceInteger'),
+    ),
+    'eval'          => array
     (
         'tl_class' => 'w50',
-        'rgxp' => 'digit',
+        'rgxp'     => 'digit',
     ),
 );
