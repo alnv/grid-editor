@@ -83,7 +83,12 @@ class Column
 		$classes = array();
 
 		foreach($this->sizes as $device => $size) {
-			$classes[] = sprintf('col-%s-%s', $device, $size['width']);
+            if($size['width']) {
+                $classes[] = sprintf('col-%s-%s', $device, $size['width']);
+            }
+            else {
+                $classes[] = 'hidden-' . $device;
+            }
 
 			if($size['offset']) {
 				$classes[] = sprintf('col-%s-offset-%s', $device, $size['offset']);
