@@ -1,0 +1,8 @@
+<?php $id = uniqid('wrapper_'); ?>
+<div id="<?php echo $id; ?>"></div>
+<script>
+    var parent = $('<?php echo $id; ?>').getParent('li');
+
+    parent.getElements('.wrapper_start').setStyle('border-top', '1px solid #bbb');
+    parent.getElements('.wrapper_stop').setStyle('border-bottom', '1px solid #bbb');
+</script>

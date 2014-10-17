@@ -2,6 +2,7 @@
 
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
+use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 use Netzmacht\Bootstrap\Grid\Grid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,8 +21,9 @@ class Subcolumns
 	public static function setUp()
 	{
 		if(static::isActive()) {
-			$GLOBALS['TL_HOOKS']['isVisibleElement'][]   = array('Netzmacht\Bootstrap\Grid\Integration\Subcolumns', 'hookIsVisibleElement');
-			$GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = get_called_class() . '::getGrids';
+			$GLOBALS['TL_HOOKS']['isVisibleElement'][]     = array('Netzmacht\Bootstrap\Grid\Integration\Subcolumns', 'hookIsVisibleElement');
+			$GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][]   = 'Netzmacht\Bootstrap\Grid\Integration\Subcolumns::getGrids';
+            $GLOBALS['TL_HOOKS']['parseTemplate'][]        = array('Netzmacht\Bootstrap\Grid\Integration\Subcolumns', 'hookParseTemplate');
 		}
 	}
 
@@ -34,6 +36,18 @@ class Subcolumns
 			&& $GLOBALS['TL_CONFIG']['subcolumns'] == static::$name;
 	}
 
+    /**
+     * @param \Template $template
+     */
+    public function hookParseTemplate(\Template $template)
+    {
+        if(TL_MODE == 'BE'
+            && $template->getName() == 'be_subcolumns'
+            && Bootstrap::getConfigVar('grid-editor.backend.replace-subcolumns-template')
+        ) {
+            $template->setName('be_subcolumns_bootstrap');
+        }
+    }
 
 	/**
 	 * @param \Model $model
