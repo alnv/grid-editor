@@ -43,7 +43,20 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param ReplaceInsertTagsEvent $event
+     * @param $buffer
+     * @return string
+     */
+    public function hookOutputFrontendTemplate($buffer)
+    {
+        return preg_replace(
+            '/(\{\{grid::.*)\}\}/Ui',
+            '$1|refresh}}',
+            $buffer
+        );
+    }
+
+    /**
+     * @param param ReplaceInsertTagsEvent $event
      */
     public function parseInsertTag(ReplaceInsertTagsEvent $event)
     {
@@ -51,30 +64,32 @@ class InsertTag implements EventSubscriberInterface
             return;
         }
 
-        $columnSetId = $this->getColumnSetId($event);
-        $walker      = $this->getWalker($event->getParam(0), $columnSetId);
+        $walker = $this->getWalker($event);
 
         if (!$walker) {
             // TODO: DEBUG Message
             return;
         }
 
-        if (in_array($event->getParam(1), array('start', 'end'))) {
+        if (in_array($event->getParam(1), array('begin', 'walk', 'end'))) {
             $method = $event->getParam(1);
             $event->setHtml($walker->$method());
         } else {
-          $event->setHtml($walker->column());
+            $event->setHtml($walker->column());
         }
     }
 
     /**
-     * @param string $identifier
-     * @param int $columnSetId
+     * @param ReplaceInsertTagsEvent $event
      * @return Walker|null
      */
-    private function getWalker($identifier, $columnSetId)
+    private function getWalker(ReplaceInsertTagsEvent $event)
     {
+        $identifier = $event->getParam(0);
+
         if (!isset(static::$walkers[$identifier])) {
+            $columnSetId = $this->getColumnSetId($event);
+
             try {
                 $grid = Grid::loadFromDatabase($columnSetId);
                 static::$walkers[$identifier] = new Walker($grid);
@@ -95,7 +110,7 @@ class InsertTag implements EventSubscriberInterface
     {
         $columnSetId = $event->getParam(0);
 
-        if ($event->getParam(1) == 'start' && $event->getParam(2)) {
+        if ($event->getParam(1) == 'begin' && $event->getParam(2)) {
             $columnSetId = $event->getParam(2);
 
             return $columnSetId;

@@ -17,6 +17,11 @@ $GLOBALS['BE_MOD']['design']['columnset'] = array(
 
 
 // integrations
+$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(
+    'Netzmacht\Bootstrap\Grid\Integration\InsertTag',
+    'hookOutputFrontendTemplate'
+);
+
 $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'Netzmacht\Bootstrap\Grid\Integration\InsertTag';
 
 \Netzmacht\Bootstrap\Grid\Integration\Subcolumns::setUp();
