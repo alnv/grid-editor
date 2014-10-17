@@ -16,7 +16,9 @@ $GLOBALS['BE_MOD']['design']['columnset'] = array(
 );
 
 
-// hooks
+// integrations
+$GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'Netzmacht\Bootstrap\Grid\Integration\InsertTag';
+
 \Netzmacht\Bootstrap\Grid\Integration\Subcolumns::setUp();
 \Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5::setUp();
 

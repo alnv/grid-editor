@@ -98,6 +98,14 @@ class Grid
 		return array();
 	}
 
+    /**
+     * @param $index
+     * @return bool
+     */
+    public function hasColumn($index)
+    {
+        return isset($this->columns[$index]);
+    }
 
 	/**
 	 * @param $index
