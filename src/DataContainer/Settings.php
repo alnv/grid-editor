@@ -8,7 +8,6 @@
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
 
-
 class Settings
 {
     /**
@@ -20,4 +19,4 @@ class Settings
         return (int) $value;
     }
 
-} 
+}

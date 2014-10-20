@@ -28,11 +28,10 @@ class Walker
      */
     private $index;
 
-
     /**
      * @param Grid $grid
      */
-    function __construct(Grid $grid)
+    public function __construct(Grid $grid)
     {
         $this->grid = $grid;
     }
@@ -97,4 +96,4 @@ class Walker
 
         return $this->column();
     }
-} 
+}

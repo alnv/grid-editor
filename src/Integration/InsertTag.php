@@ -11,7 +11,6 @@
 
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
-
 use Netzmacht\Bootstrap\Core\Event\ReplaceInsertTagsEvent;
 use Netzmacht\Bootstrap\Grid\Grid;
 use Netzmacht\Bootstrap\Grid\Walker;
@@ -80,7 +79,7 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param ReplaceInsertTagsEvent $event
+     * @param  ReplaceInsertTagsEvent $event
      * @return Walker|null
      */
     private function getWalker(ReplaceInsertTagsEvent $event)
@@ -93,8 +92,7 @@ class InsertTag implements EventSubscriberInterface
             try {
                 $grid = Grid::loadFromDatabase($columnSetId);
                 static::$walkers[$identifier] = new Walker($grid);
-            }
-            catch (\Exception $e) {
+            } catch (\Exception $e) {
                 return null;
             }
         }
@@ -103,7 +101,7 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param ReplaceInsertTagsEvent $event
+     * @param  ReplaceInsertTagsEvent $event
      * @return null|string
      */
     private function getColumnSetId(ReplaceInsertTagsEvent $event)
@@ -119,4 +117,4 @@ class InsertTag implements EventSubscriberInterface
         return $columnSetId;
     }
 
-} 
+}

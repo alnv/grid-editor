@@ -13,174 +13,169 @@ use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 class ColumnSet extends \Backend
 {
 
+    /**
+     * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
+     * creates its palette dynamically
+     *
+     * @param $dc
+     */
+    public function appendColumnsetIdToPalette($dc)
+    {
+        if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
+            return;
+        }
 
-	/**
-	 * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
-	 * creates its palette dynamically
-	 *
-	 * @param $dc
-	 */
-	public function appendColumnsetIdToPalette($dc)
-	{
-		if($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-			return;
-		}
+        if ($dc->table == 'tl_content') {
+            $model = \ContentModel::findByPK($dc->id);
 
-		if($dc->table == 'tl_content') {
-			$model = \ContentModel::findByPK($dc->id);
+            if ($model->sc_type > 0) {
+                \MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('columnset_id'));
+            }
+        } else {
+            $model = \ModuleModel::findByPk($dc->id);
 
-			if($model->sc_type > 0) {
-				\MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('columnset_id'));
-			}
-		}
-		else {
-			$model = \ModuleModel::findByPk($dc->id);
+            if ($model->sc_type > 0) {
+                if ($model->sc_type > 0) {
+                    $GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns'] = str_replace(
+                        'sc_type,',
+                        'sc_type,columnset_id,',
+                        $GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns']
+                    );
+                }
+            }
+        }
+    }
 
-			if($model->sc_type > 0) {
-				if($model->sc_type > 0) {
-					$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns'] = str_replace(
-						'sc_type,',
-						'sc_type,columnset_id,',
-						$GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns']
-					);
-				}
-			}
-		}
-	}
+    /**
+     * Append column sizes fields dynamically to the palettes. Not using
+     * @param $dc
+     */
+    public function appendColumnSizesToPalette($dc)
+    {
+        $model = \Database::getInstance()
+            ->prepare('SELECT * FROM tl_columnset WHERE id=?')
+            ->limit(1)
+            ->execute($dc->id);
 
+        $sizes = array_merge(deserialize($model->sizes, true));
 
-	/**
-	 * Append column sizes fields dynamically to the palettes. Not using
-	 * @param $dc
-	 */
-	public function appendColumnSizesToPalette($dc)
-	{
-		$model = \Database::getInstance()
-			->prepare('SELECT * FROM tl_columnset WHERE id=?')
-			->limit(1)
-			->execute($dc->id);
+        foreach ($sizes as $size) {
+            $field = 'columnset_' . $size;
 
-		$sizes = array_merge(deserialize($model->sizes, true));
+            \MetaPalettes::appendFields('tl_columnset', 'columnset', array($field));
+        }
+    }
 
-		foreach($sizes as $size) {
-			$field = 'columnset_' . $size;
-
-			\MetaPalettes::appendFields('tl_columnset', 'columnset', array($field));
-		}
-	}
-
-
-	/**
-	 * create a MCW row for each column
-	 *
-	 * @param string $value deseriazable value, for getting an array
-	 * @param $mcw multi column wizard or DC_Table
-	 * @return mixed
-	 */
-	public function createColumns($value, $mcw)
-	{
-		$columns = (int)$mcw->activeRecord->columns;
-		$value   = deserialize($value, true);
-		$count   = count($value);
+    /**
+     * create a MCW row for each column
+     *
+     * @param string $value deseriazable value, for getting an array
+     * @param $mcw multi column wizard or DC_Table
+     * @return mixed
+     */
+    public function createColumns($value, $mcw)
+    {
+        $columns = (int) $mcw->activeRecord->columns;
+        $value   = deserialize($value, true);
+        $count   = count($value);
         $total   = Bootstrap::getConfigVar('grid-editor.columns');
 
-		// initialize columns
-		if($count == 0) {
-			for($i = 0; $i < $columns; $i++) {
-				$value[$i]['width'] = floor($total / $columns);
-			}
-		} // reduce columns if necessary
-		elseif($count > $columns) {
-			$count = count($value) - $columns;
+        if ($count == 0) {
+            // initialize columns
 
-			for($i = 0; $i < $count; $i++) {
-				array_pop($value);
-			}
-		} // make sure that column numbers has not changed
-		else {
-			for($i = 0; $i < ($columns - $count); $i++) {
-				$value[$i + $count]['width'] = floor($total / $columns);
-			}
-		}
+            for ($i = 0; $i < $columns; $i++) {
+                $value[$i]['width'] = floor($total / $columns);
+            }
+        } elseif ($count > $columns) {
+            // reduce columns if necessary
 
-		return $value;
-	}
+            $count = count($value) - $columns;
 
+            for ($i = 0; $i < $count; $i++) {
+                array_pop($value);
+            }
+        } else {
+            // make sure that column numbers has not changed
 
-	/**
-	 * replace subcolumns getAllTypes method, to load all created columnsets. There is a fallback provided if not
-	 * bootstra_customizable is used
-	 *
-	 * @param DC_Table $dc
-	 * @return array
-	 */
-	public function getAllTypes($dc)
-	{
-		if($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-			$sc = new \tl_content_sc();
+            for ($i = 0; $i < ($columns - $count); $i++) {
+                $value[$i + $count]['width'] = floor($total / $columns);
+            }
+        }
 
-			return $sc->getAllTypes();
-		}
+        return $value;
+    }
 
-		$this->import('Database');
-		$collection = $this->Database->execute('SELECT columns FROM tl_columnset GROUP BY columns ORDER BY columns');
+    /**
+     * replace subcolumns getAllTypes method, to load all created columnsets. There is a fallback provided if not
+     * bootstra_customizable is used
+     *
+     * @param DC_Table $dc
+     * @return array
+     */
+    public function getAllTypes($dc)
+    {
+        if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
+            $sc = new \tl_content_sc();
 
-		$types = array();
+            return $sc->getAllTypes();
+        }
 
-		while($collection->next()) {
-			$types[] = $collection->columns;
-		}
+        $this->import('Database');
+        $collection = $this->Database->execute('SELECT columns FROM tl_columnset GROUP BY columns ORDER BY columns');
 
-		return $types;
-	}
+        $types = array();
 
+        while ($collection->next()) {
+            $types[] = $collection->columns;
+        }
 
-	/**
-	 * @return array
-	 */
-	public function getGrids($dc)
-	{
-		if($dc->activeRecord) {
-			$dispatcher = $GLOBALS['container']['event-dispatcher'];
-			$event      = new GetGridsEvent($dc->activeRecord);
-			$dispatcher->dispatch(GetGridsEvent::NAME, $event);
+        return $types;
+    }
 
-			return $event->getGrids()->getArrayCopy();
-		}
+    /**
+     * @return array
+     */
+    public function getGrids($dc)
+    {
+        if ($dc->activeRecord) {
+            $dispatcher = $GLOBALS['container']['event-dispatcher'];
+            $event      = new GetGridsEvent($dc->activeRecord);
+            $dispatcher->dispatch(GetGridsEvent::NAME, $event);
 
-		return array();
-	}
+            return $event->getGrids()->getArrayCopy();
+        }
 
+        return array();
+    }
 
-	/**
-	 * @param $dc
-	 * @return array
-	 */
-	public function getColumnsForModule($dc)
-	{
-		if($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-			$sc = new \tl_module_sc();
+    /**
+     * @param $dc
+     * @return array
+     */
+    public function getColumnsForModule($dc)
+    {
+        if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
+            $sc = new \tl_module_sc();
 
-			return $sc->getColumns();
-		}
+            return $sc->getColumns();
+        }
 
-		$model = \ModuleModel::findByPK($dc->currentRecord);
-		$cols  = array();
+        $model = \ModuleModel::findByPK($dc->currentRecord);
+        $cols  = array();
 
-		$translate = array('first', 'second', 'third', 'fourth', 'fith');
+        $translate = array('first', 'second', 'third', 'fourth', 'fith');
 
-		for($i = 0; $i < $model->sc_type; $i++) {
-			if(!array_key_exists($i, $translate)) {
-				break;
-			}
+        for ($i = 0; $i < $model->sc_type; $i++) {
+            if (!array_key_exists($i, $translate)) {
+                break;
+            }
 
-			$key        = $translate[$i];
-			$cols[$key] = $GLOBALS['TL_LANG']['MSC']['sc_' . $key];
-		}
+            $key        = $translate[$i];
+            $cols[$key] = $GLOBALS['TL_LANG']['MSC']['sc_' . $key];
+        }
 
-		return $cols;
-	}
-
+        return $cols;
+    }
 
     /**
      * @return array
@@ -190,14 +185,13 @@ class ColumnSet extends \Backend
         $columns = Bootstrap::getConfigVar('grid-editor.columns');
         $values  = array();
 
-        for($i = 0; $i <= $columns; $i++) {
+        for ($i = 0; $i <= $columns; $i++) {
             $values['push'][] = 'push-' . $i;
             $values['pull'][] = 'pull-' . $i;
         }
 
         return $values;
     }
-
 
     /**
      * @return array

@@ -8,60 +8,55 @@
 
 namespace Netzmacht\Bootstrap\Grid\Builder;
 
-
 use Netzmacht\Bootstrap\Grid\Grid;
 
 class GridBuilder
 {
-	/**
-	 * @var Column[]
-	 */
-	protected $columns = array();
+    /**
+     * @var Column[]
+     */
+    protected $columns = array();
 
+    /**
+     * @return GridBuilder
+     */
+    public static function create()
+    {
+        return new static();
+    }
 
-	/**
-	 * @return GridBuilder
-	 */
-	public static function create()
-	{
-		return new static();
-	}
+    /**
+     * @return Column
+     */
+    public function addColumn()
+    {
+        $column          = new Column($this);
+        $this->columns[] = $column;
 
+        return $column;
+    }
 
-	/**
-	 * @return Column
-	 */
-	public function addColumn()
-	{
-		$column          = new Column($this);
-		$this->columns[] = $column;
+    /**
+     * @param $index
+     * @return Column
+     */
+    public function getColumn($index)
+    {
+        return $this->columns[$index];
+    }
 
-		return $column;
-	}
+    /**
+     * @return Grid
+     */
+    public function build()
+    {
+        $grid = new Grid();
 
+        foreach ($this->columns as $column) {
+            $grid->addColumn($column->build());
+        }
 
-	/**
-	 * @param $index
-	 * @return Column
-	 */
-	public function getColumn($index)
-	{
-		return $this->columns[$index];
-	}
+        return $grid;
+    }
 
-
-	/**
-	 * @return Grid
-	 */
-	public function build()
-	{
-		$grid = new Grid();
-
-		foreach($this->columns as $column) {
-			$grid->addColumn($column->build());
-		}
-
-		return $grid;
-	}
-
-} 
+}

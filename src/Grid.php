@@ -8,95 +8,90 @@
 
 namespace Netzmacht\Bootstrap\Grid;
 
-
 use Netzmacht\Bootstrap\Grid\Builder\GridBuilder;
 
 class Grid
 {
-	/**
-	 * @var array
-	 */
-	protected $columns = array();
+    /**
+     * @var array
+     */
+    protected $columns = array();
 
-	/**
-	 * @var array
-	 */
-	private static $gridsFromDb = array();
+    /**
+     * @var array
+     */
+    private static $gridsFromDb = array();
 
+    /**
+     * @param $columns
+     */
+    public function __construct(array $columns=array())
+    {
+        foreach ($columns as $column) {
+            $this->addColumn($column);
+        }
+    }
 
-	/**
-	 * @param $columns
-	 */
-	function __construct(array $columns=array())
-	{
-		foreach($columns as $column) {
-			$this->addColumn($column);
-		}
-	}
+    /**
+     * @param $id
+     * @return \Netzmacht\Bootstrap\Grid\Grid
+     * @throws \InvalidArgumentException
+     */
+    public static function loadFromDatabase($id)
+    {
+        if (isset(static::$gridsFromDb[$id])) {
+            return static::$gridsFromDb[$id];
+        }
 
+        $result = \Database::getInstance()
+            ->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
+            ->limit(1)
+            ->execute($id);
 
-	/**
-	 * @param $id
-	 * @return \Netzmacht\Bootstrap\Grid\Grid
-	 * @throws \InvalidArgumentException
-	 */
-	public static function loadFromDatabase($id)
-	{
-		if(isset(static::$gridsFromDb[$id])) {
-			return static::$gridsFromDb[$id];
-		}
+        if ($result->numRows < 1) {
+            throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $id));
+        }
 
-		$result = \Database::getInstance()
-			->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
-			->limit(1)
-			->execute($id);
+        $columns = $result->columns;
+        $sizes   = deserialize($result->sizes, true);
+        $builder = GridBuilder::create();
 
-		if($result->numRows < 1) {
-			throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $id));
-		}
+        for ($i=0; $i<$columns; $i++) {
+            $column = $builder->addColumn();
 
-		$columns = $result->columns;
-		$sizes   = deserialize($result->sizes, true);
-		$builder = GridBuilder::create();
+            foreach ($sizes as $size) {
+                $key    = 'columnset_' . $size;
+                $values = deserialize($result->$key, true);
 
-		for($i=0; $i<$columns; $i++) {
-			$column = $builder->addColumn();
+                $column->forDevice($size, $values[$i]['width'], $values[$i]['offset'] ?: null, $values[$i]['order'] ?: null);
+            }
+        }
 
-			foreach($sizes as $size) {
-				$key    = 'columnset_' . $size;
-				$values = deserialize($result->$key, true);
+        static::$gridsFromDb[$id] = $builder->build();
 
-				$column->forDevice($size, $values[$i]['width'], $values[$i]['offset'] ?: null, $values[$i]['order'] ?: null);
-			}
-		}
+        return static::$gridsFromDb[$id];
+    }
 
-		static::$gridsFromDb[$id] = $builder->build();
+    /**
+     * @param array $column
+     */
+    public function addColumn(array $column)
+    {
+        $this->columns[] = $column;
+    }
 
-		return static::$gridsFromDb[$id];
-	}
+    /**
+     * @param $index
+     * @return array
+     */
+    public function getColumn($index)
+    {
+        if (isset($this->columns[$index])) {
+            return $this->columns[$index];
+        }
 
-
-	/**
-	 * @param array $column
-	 */
-	public function addColumn(array $column)
-	{
-		$this->columns[] = $column;
-	}
-
-
-	/**
-	 * @param $index
-	 * @return array
-	 */
-	public function getColumn($index)
-	{
-		if(isset($this->columns[$index])) {
-			return $this->columns[$index];
-		}
-
-		return array();
-	}
+        return array();
+    }
 
     /**
      * @param $index
@@ -107,25 +102,25 @@ class Grid
         return isset($this->columns[$index]);
     }
 
-	/**
-	 * @param $index
-	 * @return string
-	 */
-	public function getColumnAsString($index)
-	{
-		if(isset($this->columns[$index])) {
-			return implode(' ', $this->columns[$index]);
-		}
+    /**
+     * @param $index
+     * @return string
+     */
+    public function getColumnAsString($index)
+    {
+        if (isset($this->columns[$index])) {
+            return implode(' ', $this->columns[$index]);
+        }
 
-		return '';
-	}
+        return '';
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getColumns()
-	{
-		return $this->columns;
-	}
+    /**
+     * @return array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
+    }
 
-} 
+}
