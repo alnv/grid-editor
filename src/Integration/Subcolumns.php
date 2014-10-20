@@ -19,9 +19,17 @@ class Subcolumns
     public static function setUp()
     {
         if (static::isActive()) {
-            $GLOBALS['TL_HOOKS']['isVisibleElement'][]     = array('Netzmacht\Bootstrap\Grid\Integration\Subcolumns', 'hookIsVisibleElement');
-            $GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][]   = 'Netzmacht\Bootstrap\Grid\Integration\Subcolumns::getGrids';
-            $GLOBALS['TL_HOOKS']['parseTemplate'][]        = array('Netzmacht\Bootstrap\Grid\Integration\Subcolumns', 'hookParseTemplate');
+            $GLOBALS['TL_HOOKS']['isVisibleElement'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\Subcolumns',
+                'hookIsVisibleElement'
+            );
+
+            $GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = 'Netzmacht\Bootstrap\Grid\Integration\Subcolumns::getGrids';
+
+            $GLOBALS['TL_HOOKS']['parseTemplate'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\Subcolumns',
+                'hookParseTemplate'
+            );
         }
     }
 
@@ -39,7 +47,7 @@ class Subcolumns
      */
     public function hookParseTemplate(\Template $template)
     {
-        if(TL_MODE == 'BE'
+        if (TL_MODE == 'BE'
             && $template->getName() == 'be_subcolumns'
             && Bootstrap::getConfigVar('grid-editor.backend.replace-subcolumns-template')
         ) {
@@ -54,7 +62,7 @@ class Subcolumns
      */
     public function hookIsVisibleElement(\Model $model, $isVisible)
     {
-        if($GLOBALS['TL_CONFIG']['subcolumns'] == static::$name && (
+        if ($GLOBALS['TL_CONFIG']['subcolumns'] == static::$name && (
             ($model->getTable() == 'tl_module' && $model->type == 'subcolumns') ||
             $model->getTable() == 'tl_content' && ($model->type == 'colsetStart' ||
             $model->type == 'colsetPart'
@@ -63,14 +71,14 @@ class Subcolumns
                 $modelClass = get_class($model);
                 $parent     = $modelClass::findByPk($model->sc_parent);
                 $type       = $parent->sc_type;
-                $id         = $parent->bootstrap_grid;
+                $gridId         = $parent->bootstrap_grid;
             } else {
                 $type       = $model->sc_type;
-                $id         = $model->bootstrap_grid;
+                $gridId     = $model->bootstrap_grid;
             }
 
             try {
-                $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($id);
+                $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
             } catch (\Exception $e) {
             }
         }
@@ -82,18 +90,18 @@ class Subcolumns
      * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
      * creates its palette dynamically
      *
-     * @param $dc
+     * @param $dataContainer
      */
-    public function appendColumnsetIdToPalette($dc)
+    public function appendColumnsetIdToPalette($dataContainer)
     {
-        if ($dc->table == 'tl_content') {
-            $model = \ContentModel::findByPK($dc->id);
+        if ($dataContainer->table == 'tl_content') {
+            $model = \ContentModel::findByPK($dataContainer->id);
 
             if ($model->sc_type > 0) {
-                \MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('bootstrap_grid'));
+                \MetaPalettes::appendFields($dataContainer->table, 'colsetStart', 'colset', array('bootstrap_grid'));
             }
         } else {
-            $model = \ModuleModel::findByPk($dc->id);
+            $model = \ModuleModel::findByPk($dataContainer->id);
 
             if ($model->sc_type > 0) {
                 $GLOBALS['TL_DCA']['tl_module']['palettes']['subcolumns'] = str_replace(
@@ -127,13 +135,13 @@ class Subcolumns
     }
 
     /**
-     * @param $id
+     * @param $gridId
      * @return array
      */
-    protected function prepareContainer($id)
+    protected function prepareContainer($gridId)
     {
         $container = array();
-        $grid      = Grid::loadFromDatabase($id);
+        $grid      = Grid::loadFromDatabase($gridId);
 
         foreach ($grid->getColumns() as $column) {
             $container[] = array(implode(' ', $column));
@@ -141,5 +149,4 @@ class Subcolumns
 
         return $container;
     }
-
 }

@@ -18,5 +18,4 @@ class Settings
     {
         return (int) $value;
     }
-
 }

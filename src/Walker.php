@@ -44,7 +44,12 @@ class Walker
     {
         $this->index = 0;
 
-        return sprintf('<div class="row">%s<div class="%s">%s', PHP_EOL, $this->grid->getColumnAsString($this->index), PHP_EOL);
+        return sprintf(
+            '<div class="row">%s<div class="%s">%s',
+            PHP_EOL,
+            $this->grid->getColumnAsString($this->index),
+            PHP_EOL
+        );
     }
 
     /**

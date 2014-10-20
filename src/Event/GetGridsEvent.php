@@ -26,7 +26,7 @@ class GetGridsEvent extends Event
      * @param $model
      * @param array $grids
      */
-    public function __construct($model, array $grids=array())
+    public function __construct($model, array $grids = array())
     {
         $this->model = $model;
         $this->grids = new \ArrayObject($grids);
@@ -55,5 +55,4 @@ class GetGridsEvent extends Event
     {
         return $this->model;
     }
-
 }

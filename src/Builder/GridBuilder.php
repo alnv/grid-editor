@@ -58,5 +58,4 @@ class GridBuilder
 
         return $grid;
     }
-
 }

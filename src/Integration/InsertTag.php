@@ -116,5 +116,4 @@ class InsertTag implements EventSubscriberInterface
 
         return $columnSetId;
     }
-
 }

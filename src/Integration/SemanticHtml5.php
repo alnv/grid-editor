@@ -29,7 +29,11 @@ class SemanticHtml5
     public static function setUp()
     {
         if (static::isActive()) {
-            $GLOBALS['TL_HOOKS']['parseTemplate'][]      = array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'hookParseTemplate');
+            $GLOBALS['TL_HOOKS']['parseTemplate'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5',
+                'hookParseTemplate'
+            );
+
             $GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = get_called_class() . '::getGrids';
         }
     }
@@ -78,7 +82,10 @@ class SemanticHtml5
      */
     public function hookParseTemplate(\Template $template)
     {
-        if (substr($template->getName(), 0, 3) != 'ce_' || $template->type != 'semantic_html5' || $template->sh5_tag != 'start') {
+        if (substr($template->getName(), 0, 3) != 'ce_'
+            || $template->type != 'semantic_html5'
+            || $template->sh5_tag != 'start'
+        ) {
             return;
         }
 
@@ -111,14 +118,14 @@ class SemanticHtml5
     }
 
     /**
-     * @param $dc
+     * @param $dataContainer
      * @return array
      */
-    public function getGridElements($dc)
+    public function getGridElements($dataContainer)
     {
         $elements = array();
 
-        if ($dc->activeRecord) {
+        if ($dataContainer->activeRecord) {
             $query = <<<SQL
 SELECT
     c.*, g.title as gridTitle, g.columns as gridColumns
@@ -129,22 +136,27 @@ LEFT JOIN
 ON
     g.id = c.bootstrap_grid
 WHERE
-    (c.ptable=? OR c.ptable=?) AND c.pid=? AND c.type=? AND c.sh5_tag=? AND c.bootstrap_isGridElement=? AND c.sorting < ?
+    (c.ptable=? OR c.ptable=?)
+    AND c.pid=?
+    AND c.type=?
+    AND c.sh5_tag=?
+    AND c.bootstrap_isGridElement=?
+    AND c.sorting < ?
 ORDER BY
     sorting
 SQL;
 
-            $ptable = $GLOBALS['TL_DCA'][$dc->table]['config']['ptable'];
+            $ptable = $GLOBALS['TL_DCA'][$dataContainer->table]['config']['ptable'];
             $result = \Database::getInstance()
                 ->prepare($query)
                 ->execute(
                     $ptable,
                     $ptable == 'tl_article' ? '' : $ptable,
-                    $dc->activeRecord->pid,
+                    $dataContainer->activeRecord->pid,
                     'semantic_html5',
                     'start',
                     'row',
-                    $dc->activeRecord->sorting
+                    $dataContainer->activeRecord->sorting
                 );
 
             while ($result->next()) {
@@ -155,7 +167,5 @@ SQL;
         }
 
         return $elements;
-
     }
-
 }

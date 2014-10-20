@@ -25,7 +25,7 @@ class Grid
     /**
      * @param $columns
      */
-    public function __construct(array $columns=array())
+    public function __construct(array $columns = array())
     {
         foreach ($columns as $column) {
             $this->addColumn($column);
@@ -33,23 +33,23 @@ class Grid
     }
 
     /**
-     * @param $id
+     * @param  int $gridId
      * @return \Netzmacht\Bootstrap\Grid\Grid
      * @throws \InvalidArgumentException
      */
-    public static function loadFromDatabase($id)
+    public static function loadFromDatabase($gridId)
     {
-        if (isset(static::$gridsFromDb[$id])) {
-            return static::$gridsFromDb[$id];
+        if (isset(static::$gridsFromDb[$gridId])) {
+            return static::$gridsFromDb[$gridId];
         }
 
         $result = \Database::getInstance()
             ->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
             ->limit(1)
-            ->execute($id);
+            ->execute($gridId);
 
         if ($result->numRows < 1) {
-            throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $id));
+            throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
         }
 
         $columns = $result->columns;
@@ -63,13 +63,18 @@ class Grid
                 $key    = 'columnset_' . $size;
                 $values = deserialize($result->$key, true);
 
-                $column->forDevice($size, $values[$i]['width'], $values[$i]['offset'] ?: null, $values[$i]['order'] ?: null);
+                $column->forDevice(
+                    $size,
+                    $values[$i]['width'],
+                    $values[$i]['offset'] ?: null,
+                    $values[$i]['order'] ?: null
+                );
             }
         }
 
-        static::$gridsFromDb[$id] = $builder->build();
+        static::$gridsFromDb[$gridId] = $builder->build();
 
-        return static::$gridsFromDb[$id];
+        return static::$gridsFromDb[$gridId];
     }
 
     /**
@@ -122,5 +127,4 @@ class Grid
     {
         return $this->columns;
     }
-
 }

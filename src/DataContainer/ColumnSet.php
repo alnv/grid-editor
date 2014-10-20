@@ -1,6 +1,7 @@
 <?php
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
+
 use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 
@@ -17,22 +18,22 @@ class ColumnSet extends \Backend
      * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
      * creates its palette dynamically
      *
-     * @param $dc
+     * @param $dataContainer
      */
-    public function appendColumnsetIdToPalette($dc)
+    public function appendColumnsetIdToPalette($dataContainer)
     {
         if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
             return;
         }
 
-        if ($dc->table == 'tl_content') {
-            $model = \ContentModel::findByPK($dc->id);
+        if ($dataContainer->table == 'tl_content') {
+            $model = \ContentModel::findByPK($dataContainer->id);
 
             if ($model->sc_type > 0) {
-                \MetaPalettes::appendFields($dc->table, 'colsetStart', 'colset', array('columnset_id'));
+                \MetaPalettes::appendFields($dataContainer->table, 'colsetStart', 'colset', array('columnset_id'));
             }
         } else {
-            $model = \ModuleModel::findByPk($dc->id);
+            $model = \ModuleModel::findByPk($dataContainer->id);
 
             if ($model->sc_type > 0) {
                 if ($model->sc_type > 0) {
@@ -48,14 +49,14 @@ class ColumnSet extends \Backend
 
     /**
      * Append column sizes fields dynamically to the palettes. Not using
-     * @param $dc
+     * @param $dataContainer
      */
-    public function appendColumnSizesToPalette($dc)
+    public function appendColumnSizesToPalette($dataContainer)
     {
         $model = \Database::getInstance()
             ->prepare('SELECT * FROM tl_columnset WHERE id=?')
             ->limit(1)
-            ->execute($dc->id);
+            ->execute($dataContainer->id);
 
         $sizes = array_merge(deserialize($model->sizes, true));
 
@@ -109,15 +110,14 @@ class ColumnSet extends \Backend
      * replace subcolumns getAllTypes method, to load all created columnsets. There is a fallback provided if not
      * bootstra_customizable is used
      *
-     * @param DC_Table $dc
      * @return array
      */
-    public function getAllTypes($dc)
+    public function getAllTypes()
     {
         if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-            $sc = new \tl_content_sc();
+            $subcolumns = new \tl_content_sc();
 
-            return $sc->getAllTypes();
+            return $subcolumns->getAllTypes();
         }
 
         $this->import('Database');
@@ -135,11 +135,11 @@ class ColumnSet extends \Backend
     /**
      * @return array
      */
-    public function getGrids($dc)
+    public function getGrids($dataContainer)
     {
-        if ($dc->activeRecord) {
+        if ($dataContainer->activeRecord) {
             $dispatcher = $GLOBALS['container']['event-dispatcher'];
-            $event      = new GetGridsEvent($dc->activeRecord);
+            $event      = new GetGridsEvent($dataContainer->activeRecord);
             $dispatcher->dispatch(GetGridsEvent::NAME, $event);
 
             return $event->getGrids()->getArrayCopy();
@@ -149,18 +149,18 @@ class ColumnSet extends \Backend
     }
 
     /**
-     * @param $dc
+     * @param $dataContainer
      * @return array
      */
-    public function getColumnsForModule($dc)
+    public function getColumnsForModule($dataContainer)
     {
         if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-            $sc = new \tl_module_sc();
+            $subcolumns = new \tl_module_sc();
 
-            return $sc->getColumns();
+            return $subcolumns->getColumns();
         }
 
-        $model = \ModuleModel::findByPK($dc->currentRecord);
+        $model = \ModuleModel::findByPK($dataContainer->currentRecord);
         $cols  = array();
 
         $translate = array('first', 'second', 'third', 'fourth', 'fith');
@@ -214,5 +214,4 @@ class ColumnSet extends \Backend
 
         return $values;
     }
-
 }

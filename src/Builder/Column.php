@@ -37,7 +37,7 @@ class Column
      * @param null $push
      * @return $this
      */
-    public function forDevice($device, $width, $offset=null, $push=null)
+    public function forDevice($device, $width, $offset = null, $push = null)
     {
         $this->sizes[$device] = array('width' => $width, 'offset' => $offset, 'push' => $push);
 
@@ -108,5 +108,4 @@ class Column
     {
         return $this->builder;
     }
-
 }
