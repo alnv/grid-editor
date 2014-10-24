@@ -52,6 +52,12 @@
         "contao": {
             "sources":{
                 "module": "system/modules/bootstrap-grid"
+            },
+            "transifex": {
+                "project": "contao-bootstrap",
+                "prefix": "grid-editor-",
+                "languages_cto": "module/languages",
+                "languages_tx": ".tx"
             }
         },
         "branch-alias": {

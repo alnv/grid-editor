@@ -1,1 +1,4 @@
-/vendor/
+.tx/
+vendor/
+module/.skip
+composer.lock
