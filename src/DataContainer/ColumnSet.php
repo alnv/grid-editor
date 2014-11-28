@@ -115,9 +115,7 @@ class ColumnSet extends \Backend
     public function getAllTypes()
     {
         if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
-            $subcolumns = new \tl_content_sc();
-
-            return $subcolumns->getAllTypes();
+            return array_keys($GLOBALS['TL_SUBCL'][$GLOBALS['TL_CONFIG']['subcolumns']]['sets']);
         }
 
         $this->import('Database');
@@ -157,7 +155,7 @@ class ColumnSet extends \Backend
         if ($GLOBALS['TL_CONFIG']['subcolumns'] != 'bootstrap_customizable') {
             $subcolumns = new \tl_module_sc();
 
-            return $subcolumns->getColumns();
+            return $subcolumns->getColumns($dataContainer);
         }
 
         $model = \ModuleModel::findByPK($dataContainer->currentRecord);
