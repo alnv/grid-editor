@@ -83,6 +83,17 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
                 'label'               => &$GLOBALS['TL_LANG']['tl_columnset']['toggle'],
                 'icon'                => 'visible.gif',
                 'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                'button_callback'     => function () {
+                    $callback = new Netzmacht\Bootstrap\Grid\DataContainer\ToggleIconCallback(
+                        \BackendUser::getInstance(),
+                        \Input::getInstance(),
+                        \Database::getInstance(),
+                        'tl_columnset',
+                        'published'
+                    );
+
+                    return call_user_func_array($callback, func_get_args());
+                },
             ),
             'show' => array
             (
