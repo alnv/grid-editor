@@ -9,11 +9,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['sc_modules']['eval']['columnFields'][
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['columnset_id'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['columnset_id'],
-	'exclude'                 => true,
-	'inputType'               => 'select',
-	'options_callback'        => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getGrids'),
-	'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
-	'sql'                     => "int(10) unsigned NOT NULL default '0'"
+    'label'                   => &$GLOBALS['TL_LANG']['tl_module']['columnset_id'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options_callback'        => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getGrids'),
+    'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
+    'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
+    'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );
