@@ -38,7 +38,7 @@
         "felixpfeiffer/subcolumns": "Integrate grid columns using subcolumns"
     },
     "replace": {
-        "contao-legacy/subcolumns_bootstrap_customize" : "*",
+        "contao-legacy/subcolumns_bootstrap_customize": "*",
         "netzmacht/contao-boostrap-columnseteditor": "*"
     },
     "extra":{
@@ -51,7 +51,10 @@
                 "prefix": "grid-editor-",
                 "languages_cto": "module/languages",
                 "languages_tx": ".tx"
-            }
+            },
+            "runonce": [
+                "runonce/migrate.php"
+            ]
         },
         "branch-alias": {
             "dev-master": "1.0.x-dev"
