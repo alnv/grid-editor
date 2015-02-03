@@ -30,6 +30,11 @@ class Subcolumns
                 'Netzmacht\Bootstrap\Grid\Integration\Subcolumns',
                 'hookParseTemplate'
             );
+
+            $GLOBALS['TL_HOOKS']['loadFormField'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\Subcolumns',
+                'hookLoadFormField'
+            );
         }
     }
 
@@ -87,6 +92,30 @@ class Subcolumns
     }
 
     /**
+     * @param $widget
+     * @param $formId
+     * @param $formConfig
+     */
+    public function hookLoadFormField($widget, $formId, $formConfig)
+    {
+        if ($widget->type === 'formcolstart') {
+            $type   = $widget->sc_type;
+            $gridId = $widget->bootstrap_grid;
+
+        } elseif ($widget->type === 'formcolpart' || $widget->type === 'formcolend') {
+            $parent = \FormFieldModel::findByPk($widget->fsc_parent);
+            $type   = $parent->sc_type;
+            $gridId = $parent->bootstrap_grid;
+        } else {
+            return $widget;
+        }
+
+        $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+
+        return $widget;
+    }
+
+    /**
      * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
      * creates its palette dynamically
      *
@@ -99,6 +128,16 @@ class Subcolumns
 
             if ($model->sc_type > 0) {
                 \MetaPalettes::appendFields($dataContainer->table, 'colsetStart', 'colset', array('bootstrap_grid'));
+            }
+        } elseif ($dataContainer->table == 'tl_form_field') {
+            $model = \FormFieldModel::findByPk($dataContainer->id);
+
+            if ($model->fsc_type > 0) {
+                $GLOBALS['TL_DCA']['tl_form_field']['palettes']['formcolstart'] = str_replace(
+                    'fsc_color,',
+                    'fsc_color,bootstrap_grid,',
+                    $GLOBALS['TL_DCA']['tl_form_field']['palettes']['formcolstart']
+                );
             }
         } else {
             $model = \ModuleModel::findByPk($dataContainer->id);
@@ -124,6 +163,16 @@ class Subcolumns
         if ($model->type == 'colsetStart' || $model->type == 'submcolumns') {
             $query   = 'SELECT * FROM tl_columnset WHERE published=1 AND columns=? ORDER BY title';
             $columns = $model->sc_type;
+            $result  = \Database::getInstance()
+                ->prepare($query)
+                ->execute($columns);
+
+            while ($result->next()) {
+                $grids[$result->id] = $result->title;
+            }
+        } elseif ($model->type == 'formcolstart') {
+            $query   = 'SELECT * FROM tl_columnset WHERE published=1 AND columns=? ORDER BY title';
+            $columns = $model->fsc_type;
             $result  = \Database::getInstance()
                 ->prepare($query)
                 ->execute($columns);
