@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @package   contao-bootstrap
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @license   LGPL 3+
+ * @copyright 2013-2015 netzmacht creative David Molineus
+ */
+
 // inject columnset selector for subcolumns
 if(\Netzmacht\Bootstrap\Grid\Integration\Subcolumns::isActive()) {
     $GLOBALS['TL_DCA']['tl_form_field']['config']['onload_callback'][] =

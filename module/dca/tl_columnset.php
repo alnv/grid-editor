@@ -1,12 +1,11 @@
 <?php
 
 /**
- * @package   netzmacht-columnset
- * @author    David Molineus <http://www.netzmacht.de>
- * @license   GNU/LGPL
- * @copyright Copyright 2012 David Molineus netzmacht creative
- *
- **/
+ * @package   contao-bootstrap
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @license   LGPL 3+
+ * @copyright 2013-2015 netzmacht creative David Molineus
+ */
 
 /**
  * Table tl_columnset

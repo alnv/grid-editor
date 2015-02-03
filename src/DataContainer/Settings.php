@@ -1,9 +1,10 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: david
- * Date: 26.09.14
- * Time: 09:19
+ * @package   contao-bootstrap
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @license   LGPL 3+
+ * @copyright 2013-2015 netzmacht creative David Molineus
  */
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;

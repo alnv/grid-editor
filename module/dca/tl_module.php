@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @package   contao-bootstrap
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @license   LGPL 3+
+ * @copyright 2013-2015 netzmacht creative David Molineus
+ */
+
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'appendColumnsetIdToPalette');
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['sc_type']['options_callback'] = array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getAllTypes');
