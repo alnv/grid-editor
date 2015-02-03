@@ -24,5 +24,5 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['bootstrap_grid'] = array
 'submitOnChange' => true,
 'tl_class' => 'w50'
 ),
-'sql'                     => "varchar(10) NOT NULL default ''"
+'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );

@@ -15,5 +15,5 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['columnset_id'] = array
 	'options_callback'        => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getGrids'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'clr'),
-	'sql'                     => "varchar(10) NOT NULL default ''"
+	'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );

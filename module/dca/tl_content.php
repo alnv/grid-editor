@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_grid'] = array
 		'submitOnChange' => true,
 		'tl_class' => 'w50'
 	),
-	'sql'                     => "varchar(10) NOT NULL default ''"
+	'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );
 
 
@@ -47,7 +47,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_gridRow'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'getGridElements'),
 	'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'w50'),
-	'sql'                     => "varchar(10) NOT NULL default ''"
+	'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_isGridElement'] = array
