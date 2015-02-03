@@ -12,20 +12,33 @@ namespace Netzmacht\Bootstrap\Grid\Integration;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 use Netzmacht\Bootstrap\Grid\Grid;
 
+/**
+ * SemanticHtml5 integration.
+ *
+ * @package Netzmacht\Bootstrap\Grid\Integration
+ */
 class SemanticHtml5
 {
     /**
+     * Column count indexes.
+     *
      * @var array
      */
     public static $count = array();
 
     /**
+     * The used grids.
+     *
      * @var Grid[]
      */
     public static $grids = array();
 
     /**
-     * Setup semantic html5 grid integration
+     * Setup semantic html5 grid integration.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public static function setUp()
     {
@@ -40,6 +53,8 @@ class SemanticHtml5
     }
 
     /**
+     * Check if semantic html is active.
+     *
      * @return bool
      */
     public static function isActive()
@@ -48,7 +63,13 @@ class SemanticHtml5
     }
 
     /**
-     * @param GetGridsEvent $event
+     * Get grids from the database.
+     *
+     * @param GetGridsEvent $event The subscribed event.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public static function getGrids(GetGridsEvent $event)
     {
@@ -56,18 +77,23 @@ class SemanticHtml5
         $grids = $event->getGrids();
 
         if ($model->type == 'semantic_html5') {
-            $query   = 'SELECT * FROM tl_columnset WHERE published=1 ORDER BY title';
-            $result  = \Database::getInstance()->query($query);
+            $query  = 'SELECT * FROM tl_columnset WHERE published=1 ORDER BY title';
+            $result = \Database::getInstance()->query($query);
 
             while ($result->next()) {
                 $key = sprintf($GLOBALS['TL_LANG']['tl_content']['bootstrap_columns'], $result->columns);
+
                 $grids[$key][$result->id] = $result->title;
             }
         }
     }
 
     /**
-     * Inject bootstrap isGridElement to semantic html5 palette
+     * Inject bootstrap isGridElement to semantic html5 palette.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function callbackGeneratePalette()
     {
@@ -79,7 +105,11 @@ class SemanticHtml5
     }
 
     /**
-     * @param \Template $template
+     * Use the parse template hook to inject column and row classes.
+     *
+     * @param \Template $template The template.
+     *
+     * @return void
      */
     public function hookParseTemplate(\Template $template)
     {
@@ -90,37 +120,18 @@ class SemanticHtml5
             return;
         }
 
-        // semantic html5 element is marked as beginning of new grid row
-        if ($template->bootstrap_isGridElement == 'row') {
-            try {
-                static::$grids[$template->id] = Grid::loadFromDatabase($template->bootstrap_grid);
-                static::$count[$template->id] = 0;
-            } catch (\InvalidArgumentException $e) {
-                echo $e->getMessage();
-
-                return;
-            }
-
-            $template->class .= ($template->class ? ' ' : '') . 'row';
-        }
-
-        // semantic html5 element is marked as an grid column
-        if ($template->bootstrap_isGridElement == 'column') {
-            if (static::$grids[$template->bootstrap_gridRow]) {
-                $row   = $template->bootstrap_gridRow;
-                $grid  = static::$grids[$row];
-                $index = static::$count[$row];
-
-                $template->class .= ($template->class ? ' ' : '') . $grid->getColumnAsString($index);
-                static::$count[$row]++;
-            }
-        }
-
+        $this->createRow($template);
+        $this->createColumn($template);
     }
 
     /**
-     * @param $dataContainer
+     * Get all grid elements.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getGridElements($dataContainer)
     {
@@ -161,12 +172,58 @@ SQL;
                 );
 
             while ($result->next()) {
-                $headline = deserialize($result->headline, true);
+                $headline              = deserialize($result->headline, true);
                 $elements[$result->id] = ($headline['value'] ?: ('ID ' . $result->id)) . ' [' .
                     $result->gridColumns . ' - ' . $result->gridTitle . ']';
             }
         }
 
         return $elements;
+    }
+
+    /**
+     * Create the row class.
+     *
+     * @param \Template $template The template.
+     *
+     * @return void
+     */
+    private function createRow($template)
+    {
+        // semantic html5 element is marked as beginning of new grid row
+        if ($template->bootstrap_isGridElement == 'row') {
+            try {
+                static::$grids[$template->id] = Grid::loadFromDatabase($template->bootstrap_grid);
+                static::$count[$template->id] = 0;
+            } catch (\InvalidArgumentException $e) {
+                echo $e->getMessage();
+
+                return;
+            }
+
+            $template->class .= ($template->class ? ' ' : '') . 'row';
+        }
+    }
+
+    /**
+     * Create the column classes.
+     *
+     * @param \Template $template The template.
+     *
+     * @return void
+     */
+    private function createColumn($template)
+    {
+        // semantic html5 element is marked as an grid column
+        if ($template->bootstrap_isGridElement == 'column') {
+            if (static::$grids[$template->bootstrap_gridRow]) {
+                $row   = $template->bootstrap_gridRow;
+                $grid  = static::$grids[$row];
+                $index = static::$count[$row];
+
+                $template->class .= ($template->class ? ' ' : '') . $grid->getColumnAsString($index);
+                static::$count[$row]++;
+            }
+        }
     }
 }

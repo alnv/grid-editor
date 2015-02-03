@@ -9,6 +9,11 @@
 
 namespace Netzmacht\Bootstrap\Grid\Builder;
 
+/**
+ * A grid column being built.
+ *
+ * @package Netzmacht\Bootstrap\Grid\Builder
+ */
 class Column
 {
     const EXTRA_SMALL_DEVICES = 'xs';
@@ -20,17 +25,23 @@ class Column
     const PUSH = 'push';
 
     /**
+     * The column sizes.
+     *
      * @var array
      */
     protected $sizes = array();
 
     /**
+     * The grid builder.
+     *
      * @var GridBuilder
      */
     protected $builder;
 
     /**
-     * @param GridBuilder $builder
+     * Construct.
+     *
+     * @param GridBuilder $builder The grid builder.
      */
     public function __construct(GridBuilder $builder)
     {
@@ -38,10 +49,13 @@ class Column
     }
 
     /**
-     * @param $device
-     * @param $width
-     * @param null $offset
-     * @param null $push
+     * Create a column for a device.
+     *
+     * @param string   $device The device name.
+     * @param int      $width  The column width.
+     * @param int|null $offset Optional offset.
+     * @param int|null $push   Optional push.
+     *
      * @return $this
      */
     public function forDevice($device, $width, $offset = null, $push = null)
@@ -52,7 +66,10 @@ class Column
     }
 
     /**
-     * @param $device
+     * Get a size for a device.
+     *
+     * @param string $device The device.
+     *
      * @return null|array
      */
     public function getSize($device)
@@ -65,7 +82,10 @@ class Column
     }
 
     /**
-     * @param $device
+     * Remove size.
+     *
+     * @param string $device The device name.
+     *
      * @return $this
      */
     public function removeSize($device)
@@ -76,7 +96,7 @@ class Column
     }
 
     /**
-     * Build css classes
+     * Build css classes.
      *
      * @return array classes
      */
@@ -109,6 +129,8 @@ class Column
     }
 
     /**
+     * Finish the column being build.
+     *
      * @return GridBuilder
      */
     public function finish()

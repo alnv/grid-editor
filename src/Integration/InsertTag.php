@@ -15,22 +15,25 @@ use Netzmacht\Bootstrap\Grid\Walker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class InsertTag provides an insert tag integration for the grids
+ * Class InsertTag provides an insert tag integration for the grids.
  *
  * {{grid::IDENTIFIER::start::COLUMNSET_ID}}
  * {{grid::IDENTIFIER}}
  * {{grid::IDENTIFIER::end}}
+ *
  * @package Netzmacht\Bootstrap\Grid\Integration
  */
 class InsertTag implements EventSubscriberInterface
 {
     /**
+     * The insert tag walkers.
+     *
      * @var Walker[]
      */
-    private static $walkers=array();
+    private static $walkers = array();
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
@@ -40,7 +43,10 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param $buffer
+     * Rewrite grid insert tags so that the refresh flag is added.
+     *
+     * @param string $buffer The template buffer.
+     *
      * @return string
      */
     public function hookOutputFrontendTemplate($buffer)
@@ -53,7 +59,11 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param param ReplaceInsertTagsEvent $event
+     * Parse the insert tag.
+     *
+     * @param ReplaceInsertTagsEvent $event The subscribed event.
+     *
+     * @return void
      */
     public function parseInsertTag(ReplaceInsertTagsEvent $event)
     {
@@ -64,7 +74,6 @@ class InsertTag implements EventSubscriberInterface
         $walker = $this->getWalker($event);
 
         if (!$walker) {
-            // TODO: DEBUG Message
             return;
         }
 
@@ -77,7 +86,10 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param  ReplaceInsertTagsEvent $event
+     * Get a walker for the subscribed event.
+     *
+     * @param ReplaceInsertTagsEvent $event The subscribed event.
+     *
      * @return Walker|null
      */
     private function getWalker(ReplaceInsertTagsEvent $event)
@@ -88,8 +100,7 @@ class InsertTag implements EventSubscriberInterface
             $columnSetId = $this->getColumnSetId($event);
 
             try {
-                $grid = Grid::loadFromDatabase($columnSetId);
-                static::$walkers[$identifier] = new Walker($grid);
+                static::$walkers[$identifier] = new Walker(Grid::loadFromDatabase($columnSetId));
             } catch (\Exception $e) {
                 return null;
             }
@@ -99,7 +110,10 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * @param  ReplaceInsertTagsEvent $event
+     * Get the column set id.
+     *
+     * @param ReplaceInsertTagsEvent $event The subscribed event.
+     *
      * @return null|string
      */
     private function getColumnSetId(ReplaceInsertTagsEvent $event)

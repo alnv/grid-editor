@@ -10,24 +10,30 @@
 namespace Netzmacht\Bootstrap\Grid;
 
 /**
- * Class Walker allows to walk through a grid and automatically create the grid html
+ * Class Walker allows to walk through a grid and automatically create the grid html.
  *
  * @package Netzmacht\Bootstrap\Grid
  */
 class Walker
 {
     /**
+     * The grid being used.
+     *
      * @var Grid
      */
     private $grid;
 
     /**
+     * The current index.
+     *
      * @var int
      */
     private $index;
 
     /**
-     * @param Grid $grid
+     * Construct.
+     *
+     * @param Grid $grid The grid.
      */
     public function __construct(Grid $grid)
     {
@@ -35,7 +41,8 @@ class Walker
     }
 
     /**
-     * Start a new row
+     * Start a new row.
+     *
      * @return string
      */
     public function begin()
@@ -51,6 +58,8 @@ class Walker
     }
 
     /**
+     * Get the current column.
+     *
      * @return string
      */
     public function column()
@@ -71,7 +80,7 @@ class Walker
     }
 
     /**
-     * End a column and the row
+     * End a column and the current row.
      *
      * @return string
      */
@@ -83,7 +92,7 @@ class Walker
     }
 
     /**
-     * Automatically walk throw the grid
+     * Automatically walk throw the grid.
      *
      * @return string
      */
@@ -93,7 +102,7 @@ class Walker
             return $this->begin();
         }
 
-        if (!$this->grid->hasColumn($this->index+1)) {
+        if (!$this->grid->hasColumn($this->index + 1)) {
             return $this->end() . $this->begin();
         }
 

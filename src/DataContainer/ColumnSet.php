@@ -13,19 +13,22 @@ use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 
 /**
- * Class ColumnSet provides helper methods for handling the data container and generating the dynamic column set
- * container
+ * Class ColumnSet provides helper methods for handling the data container and generating the dynamic column set.
  *
  * @package Netzmacht\ColumnSet
  */
 class ColumnSet extends \Backend
 {
-
     /**
-     * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
-     * creates its palette dynamically
+     * Add column set field to the colsetStart content element.
      *
-     * @param $dataContainer
+     * We need to do it dynamically because subcolumns creates its palette dynamically.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function appendColumnsetIdToPalette($dataContainer)
     {
@@ -55,8 +58,11 @@ class ColumnSet extends \Backend
     }
 
     /**
-     * Append column sizes fields dynamically to the palettes. Not using
-     * @param $dataContainer
+     * Append column sizes fields dynamically to the palettes.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
+     * @return void
      */
     public function appendColumnSizesToPalette($dataContainer)
     {
@@ -75,10 +81,11 @@ class ColumnSet extends \Backend
     }
 
     /**
-     * create a MCW row for each column
+     * Create a MCW row for each column.
      *
-     * @param string $value deseriazable value, for getting an array
-     * @param $mcw multi column wizard or DC_Table
+     * @param string  $value Deseriazable value, for getting an array.
+     * @param \Widget $mcw   The multi column wizard or DC_Table.
+     *
      * @return mixed
      */
     public function createColumns($value, $mcw)
@@ -97,7 +104,7 @@ class ColumnSet extends \Backend
         } elseif ($count > $columns) {
             // reduce columns if necessary
 
-            $count = count($value) - $columns;
+            $count = (count($value) - $columns);
 
             for ($i = 0; $i < $count; $i++) {
                 array_pop($value);
@@ -106,7 +113,7 @@ class ColumnSet extends \Backend
             // make sure that column numbers has not changed
 
             for ($i = 0; $i < ($columns - $count); $i++) {
-                $value[$i + $count]['width'] = floor($total / $columns);
+                $value[($i + $count)]['width'] = floor($total / $columns);
             }
         }
 
@@ -114,10 +121,13 @@ class ColumnSet extends \Backend
     }
 
     /**
-     * replace subcolumns getAllTypes method, to load all created columnsets. There is a fallback provided if not
-     * bootstra_customizable is used
+     * Replace subcolumns getAllTypes method to load all created columnsets.
+     *
+     * There is a fallback provided if not bootstrap_customizable is used.
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getAllTypes()
     {
@@ -138,7 +148,13 @@ class ColumnSet extends \Backend
     }
 
     /**
+     * Get grids.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getGrids($dataContainer)
     {
@@ -154,8 +170,13 @@ class ColumnSet extends \Backend
     }
 
     /**
-     * @param $dataContainer
+     * Get columns for a a specific module.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function getColumnsForModule($dataContainer)
     {
@@ -183,6 +204,8 @@ class ColumnSet extends \Backend
     }
 
     /**
+     * Create the order values.
+     *
      * @return array
      */
     public function getColumnOrders()
@@ -199,6 +222,8 @@ class ColumnSet extends \Backend
     }
 
     /**
+     * Get column widths.
+     *
      * @return array
      */
     public function getWidths()
@@ -210,6 +235,8 @@ class ColumnSet extends \Backend
     }
 
     /**
+     * Get column numbers.
+     *
      * @return array
      */
     public function getColumns()

@@ -12,7 +12,8 @@ namespace Netzmacht\Bootstrap\Grid\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Class GetGridsEvent
+ * Class GetGridsEvent is emitted when the grid informations in the backend are loaded.
+ *
  * @package Netzmacht\Bootstrap\Grid\Event
  */
 class GetGridsEvent extends Event
@@ -20,18 +21,24 @@ class GetGridsEvent extends Event
     const NAME = 'bootstrap.get-grid-options';
 
     /**
+     * The current model.
+     *
      * @var \Database\Result
      */
     protected $model;
 
     /**
+     * The grids as array object.
+     *
      * @var \ArrayObject
      */
     protected $grids;
 
     /**
-     * @param $model
-     * @param array $grids
+     * Construct.
+     *
+     * @param \Database\Result|\Model $model The context model.
+     * @param array                   $grids The defined grids.
      */
     public function __construct($model, array $grids = array())
     {
@@ -40,14 +47,22 @@ class GetGridsEvent extends Event
     }
 
     /**
-     * @param \ArrayObject $grids
+     * Set the grids.
+     *
+     * @param \ArrayObject $grids The grids.
+     *
+     * @return $this
      */
     public function setGrids($grids)
     {
         $this->grids = $grids;
+
+        return $this;
     }
 
     /**
+     * Get the grids.
+     *
      * @return \ArrayObject
      */
     public function getGrids()
@@ -56,7 +71,9 @@ class GetGridsEvent extends Event
     }
 
     /**
-     * @return \Database\Result
+     * Get the context model.
+     *
+     * @return \Database\Result|\Model
      */
     public function getModel()
     {

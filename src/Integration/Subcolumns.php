@@ -13,15 +13,26 @@ use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 use Netzmacht\Bootstrap\Grid\Grid;
 
+/**
+ * Subcolumns integration.
+ *
+ * @package Netzmacht\Bootstrap\Grid\Integration
+ */
 class Subcolumns
 {
     /**
+     * The subcolumns config name.
+     *
      * @var string
      */
     protected static $name = 'bootstrap_customizable';
 
     /**
+     * Setup the subcolumns integration.
      *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public static function setUp()
     {
@@ -46,16 +57,22 @@ class Subcolumns
     }
 
     /**
+     * Check if subcolumns integration is activated.
+     *
      * @return bool
      */
     public static function isActive()
     {
         return in_array('Subcolumns', \Config::getInstance()->getActiveModules())
-            && $GLOBALS['TL_CONFIG']['subcolumns'] == static::$name;
+            && \Config::get('subcolumns') === static::$name;
     }
 
     /**
-     * @param \Template $template
+     * ParseTemplate hook being used to beatify the backend view.
+     *
+     * @param \Template $template The template.
+     *
+     * @return void
      */
     public function hookParseTemplate(\Template $template)
     {
@@ -68,13 +85,21 @@ class Subcolumns
     }
 
     /**
-     * @param \Model $model
-     * @param bool $isVisible
+     * The isVisibleElement hook is used to dynamically load the grid definitions from the database.
+     *
+     * Known limitation: If being logged in in the backend and frontend preview is used with show all elements
+     * it does not work!
+     *
+     * @param \Model $model     The row model.
+     * @param bool   $isVisible The current visible state.
+     *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function hookIsVisibleElement(\Model $model, $isVisible)
     {
-        if ($GLOBALS['TL_CONFIG']['subcolumns'] == static::$name && (
+        if (static::isActive() && (
             ($model->getTable() == 'tl_module' && $model->type == 'subcolumns') ||
             $model->getTable() == 'tl_content' && ($model->type == 'colsetStart' ||
             $model->type == 'colsetPart'
@@ -83,15 +108,16 @@ class Subcolumns
                 $modelClass = get_class($model);
                 $parent     = $modelClass::findByPk($model->sc_parent);
                 $type       = $parent->sc_type;
-                $gridId         = $parent->bootstrap_grid;
+                $gridId     = $parent->bootstrap_grid;
             } else {
-                $type       = $model->sc_type;
-                $gridId     = $model->bootstrap_grid;
+                $type   = $model->sc_type;
+                $gridId = $model->bootstrap_grid;
             }
 
             try {
                 $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
             } catch (\Exception $e) {
+                // Do not throw the exception in the frontend. If nothing could fetched the fallback is used.
             }
         }
 
@@ -99,34 +125,43 @@ class Subcolumns
     }
 
     /**
-     * @param $widget
-     * @param $formId
-     * @param $formConfig
+     * Load columnset definition for the form field.
+     *
+     * @param \Widget $widget The form widget.
+     *
+     * @return \Widget
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function hookLoadFormField($widget, $formId, $formConfig)
+    public function hookLoadFormField($widget)
     {
         if ($widget->type === 'formcolstart') {
             $type   = $widget->sc_type;
             $gridId = $widget->bootstrap_grid;
 
+            $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+
         } elseif ($widget->type === 'formcolpart' || $widget->type === 'formcolend') {
             $parent = \FormFieldModel::findByPk($widget->fsc_parent);
             $type   = $parent->sc_type;
             $gridId = $parent->bootstrap_grid;
-        } else {
-            return $widget;
-        }
 
-        $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+            $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+        }
 
         return $widget;
     }
 
     /**
-     * add column set field to the colsetStart content element. We need to do it dynamically because subcolumns
-     * creates its palette dynamically
+     * Add column set field to the colsetStart content element.
      *
-     * @param $dataContainer
+     * We need to do it dynamically because subcolumns creates its palette dynamically.
+     *
+     * @param \DataContainer $dataContainer The data container driver.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function appendColumnsetIdToPalette($dataContainer)
     {
@@ -160,7 +195,11 @@ class Subcolumns
     }
 
     /**
-     * @param GetGridsEvent $event
+     * Load all grids from the database.
+     *
+     * @param GetGridsEvent $event The subscribed event.
+     *
+     * @return void
      */
     public static function getGrids(GetGridsEvent $event)
     {
@@ -191,7 +230,10 @@ class Subcolumns
     }
 
     /**
-     * @param $gridId
+     * Prepare the container by loading the grid and parse it as subcolumns definition.
+     *
+     * @param int $gridId The grid id.
+     *
      * @return array
      */
     protected function prepareContainer($gridId)

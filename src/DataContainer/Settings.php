@@ -9,10 +9,18 @@
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
 
+/**
+ * Class Settings data container.
+ *
+ * @package Netzmacht\Bootstrap\Grid\DataContainer
+ */
 class Settings
 {
     /**
-     * @param $value
+     * Force an integer value.
+     *
+     * @param mixed $value Given value.
+     *
      * @return int
      */
     public function forceInteger($value)

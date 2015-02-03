@@ -11,14 +11,23 @@ namespace Netzmacht\Bootstrap\Grid\Builder;
 
 use Netzmacht\Bootstrap\Grid\Grid;
 
+/**
+ * Class GridBuilder is used to create the grid definition.
+ *
+ * @package Netzmacht\Bootstrap\Grid\Builder
+ */
 class GridBuilder
 {
     /**
+     * The grid columns.
+     *
      * @var Column[]
      */
     protected $columns = array();
 
     /**
+     * Create the grid builder.
+     *
      * @return GridBuilder
      */
     public static function create()
@@ -27,6 +36,8 @@ class GridBuilder
     }
 
     /**
+     * Add a new column.
+     *
      * @return Column
      */
     public function addColumn()
@@ -38,7 +49,10 @@ class GridBuilder
     }
 
     /**
-     * @param $index
+     * Get a column.
+     *
+     * @param int $index The column index.
+     *
      * @return Column
      */
     public function getColumn($index)
@@ -47,6 +61,8 @@ class GridBuilder
     }
 
     /**
+     * Build the grid.
+     *
      * @return Grid
      */
     public function build()

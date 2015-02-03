@@ -11,20 +11,31 @@ namespace Netzmacht\Bootstrap\Grid;
 
 use Netzmacht\Bootstrap\Grid\Builder\GridBuilder;
 
+/**
+ * Class Grid stores the grid columns definitions.
+ *
+ * @package Netzmacht\Bootstrap\Grid
+ */
 class Grid
 {
     /**
+     * The columns definition.
+     *
      * @var array
      */
     protected $columns = array();
 
     /**
+     * Database created grids.
+     *
      * @var array
      */
     private static $gridsFromDb = array();
 
     /**
-     * @param $columns
+     * Construct.
+     *
+     * @param array $columns Column definitions.
      */
     public function __construct(array $columns = array())
     {
@@ -34,9 +45,13 @@ class Grid
     }
 
     /**
-     * @param  int $gridId
-     * @return \Netzmacht\Bootstrap\Grid\Grid
-     * @throws \InvalidArgumentException
+     * Lod grid from database.
+     *
+     * @param int $gridId The databse grid id.
+     *
+     * @return Grid
+     *
+     * @throws \InvalidArgumentException If grid is not defined.
      */
     public static function loadFromDatabase($gridId)
     {
@@ -57,7 +72,7 @@ class Grid
         $sizes   = deserialize($result->sizes, true);
         $builder = GridBuilder::create();
 
-        for ($i=0; $i<$columns; $i++) {
+        for ($i = 0; $i < $columns; $i++) {
             $column = $builder->addColumn();
 
             foreach ($sizes as $size) {
@@ -79,15 +94,24 @@ class Grid
     }
 
     /**
-     * @param array $column
+     * Add a column.
+     *
+     * @param array $column The column definition.
+     *
+     * @return $this
      */
     public function addColumn(array $column)
     {
         $this->columns[] = $column;
+
+        return $this;
     }
 
     /**
-     * @param $index
+     * Get a column by it's index. If not defined an empty array is returned.
+     *
+     * @param int $index The column index.
+     *
      * @return array
      */
     public function getColumn($index)
@@ -100,7 +124,10 @@ class Grid
     }
 
     /**
-     * @param $index
+     * Check is a column exists.
+     *
+     * @param int $index The index.
+     *
      * @return bool
      */
     public function hasColumn($index)
@@ -109,7 +136,10 @@ class Grid
     }
 
     /**
-     * @param $index
+     * Get column as class string.
+     *
+     * @param int $index Column index.
+     *
      * @return string
      */
     public function getColumnAsString($index)
@@ -122,6 +152,8 @@ class Grid
     }
 
     /**
+     * Get all columns.
+     *
      * @return array
      */
     public function getColumns()
