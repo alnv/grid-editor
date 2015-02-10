@@ -209,21 +209,21 @@ $colSetTemplate = array
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['width'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getWidths'),
-                'eval'             => array('style' => 'width: 100px;'),
+                'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
             ),
             'offset' => array
             (
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['offset'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
-                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true),
+                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true, 'chosen' => true),
             ),
             'order'  => array
             (
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['order'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnOrders'),
-                'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true),
+                'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true, 'chosen' => true),
             ),
         ),
         'buttons'            => array('copy' => false, 'delete' => false),
