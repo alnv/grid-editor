@@ -71,6 +71,11 @@ class InsertTag implements EventSubscriberInterface
             return;
         }
 
+        if (TL_MODE !== 'FE') {
+            $event->setHtml(sprintf('[[%s]]', $event->getRaw()));
+            return;
+        }
+
         $walker = $this->getWalker($event);
 
         if (!$walker) {
