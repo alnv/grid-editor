@@ -26,6 +26,13 @@ class Grid
     protected $columns = array();
 
     /**
+     * Clearfixes after for each column.
+     *
+     * @var
+     */
+    private $clearfixes = array();
+
+    /**
      * Database created grids.
      *
      * @var array
@@ -88,7 +95,24 @@ class Grid
             }
         }
 
-        static::$gridsFromDb[$gridId] = $builder->build();
+        $grid       = $builder->build();
+        $clearFixes = deserialize($result->clearfix, true);
+
+        foreach ($clearFixes as $fix) {
+            $fixes = array();
+
+            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+                if ($fix[$size]) {
+                    $fixes[] = $size;
+                }
+            }
+
+            if ($fixes) {
+                $grid->addClearFixes(($fix['column'] - 1), $fixes);
+            }
+        }
+
+        static::$gridsFromDb[$gridId] = $grid;
 
         return static::$gridsFromDb[$gridId];
     }
@@ -159,5 +183,59 @@ class Grid
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * Add clear fix for a column.
+     *
+     * @param int   $column The column index.
+     * @param array $sizes  The grid sizes.
+     *
+     * @return $this
+     */
+    public function addClearFixes($column, array $sizes)
+    {
+        $this->clearfixes[$column] = $sizes;
+
+        return $this;
+    }
+
+    /**
+     * Get clearfix for a column.
+     *
+     * @param int $index The column clearfix.
+     *
+     * @return array
+     */
+    public function getClearFixes($index)
+    {
+        if (isset($this->clearfixes[$index])) {
+            return $this->clearfixes[$index];
+        }
+
+        return array();
+    }
+
+    /**
+     * Get clearfixes as string.
+     *
+     * @param $index
+     *
+     * @return string
+     */
+    public function getClearFixesAsString($index)
+    {
+        return implode(
+            PHP_EOL,
+            array_map(
+                function ($item) {
+                    return sprintf(
+                        '<div class="clearfix visible-%s-block"></div>' . PHP_EOL,
+                        $item
+                    );
+                },
+                $this->getClearfixes($index)
+            )
+        );
     }
 }

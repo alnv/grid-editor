@@ -50,8 +50,9 @@ class Walker
         $this->index = 0;
 
         return sprintf(
-            '<div class="row">%s<div class="%s">%s',
+            '<div class="row">%s%s<div class="%s">%s',
             PHP_EOL,
+            $this->grid->getClearFixesAsString($this->index),
             $this->grid->getColumnAsString($this->index),
             PHP_EOL
         );
@@ -71,9 +72,10 @@ class Walker
         }
 
         return sprintf(
-            '%s</div>%s<div class="%s">%s',
+            '%s</div>%s%s<div class="%s">%s',
             PHP_EOL,
             PHP_EOL,
+            $this->grid->getClearFixesAsString($this->index),
             $this->grid->getColumnAsString($this->index),
             PHP_EOL
         );

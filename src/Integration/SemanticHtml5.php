@@ -48,6 +48,11 @@ class SemanticHtml5
                 'hookParseTemplate'
             );
 
+            $GLOBALS['TL_HOOKS']['getContentElement'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5',
+                'hookGetContentElement'
+            );
+
             $GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = get_called_class() . '::getGrids';
         }
     }
@@ -122,6 +127,33 @@ class SemanticHtml5
 
         $this->createRow($template);
         $this->createColumn($template);
+    }
+
+    /**
+     * Add clear fixes for a column.
+     *
+     * @param \ContentModel $model  The content model.
+     * @param string        $buffer The content element output.
+     *
+     * @return string
+     */
+    public function hookGetContentElement($model, $buffer)
+    {
+        if ($model->type === 'semantic_html5'
+            && $model->sh5_tag === 'start'
+            && $model->bootstrap_isGridElement === 'column'
+            && static::$grids[$model->bootstrap_gridRow]
+        ) {
+            $row  = $model->bootstrap_gridRow;
+            $grid = static::$grids[$row];
+
+            // Index is already incremented, so go back
+            $index = (static::$count[$row] - 1);
+
+            $buffer = $grid->getClearFixesAsString($index) . $buffer;
+        }
+
+        return $buffer;
     }
 
     /**

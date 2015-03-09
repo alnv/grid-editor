@@ -246,4 +246,22 @@ class ColumnSet extends \Backend
 
         return $values;
     }
+
+    /**
+     * Get column numbers.
+     *
+     * @return array
+     */
+    public function getColumnNumbers($dataContainer)
+    {
+        if ($dataContainer->activeRecord) {
+            $columns = $dataContainer->activeRecord->columns;
+        } else {
+            $columns = Bootstrap::getConfigVar('grid-editor.columns');
+        }
+
+        $values = range(1, $columns);
+
+        return $values;
+    }
 }

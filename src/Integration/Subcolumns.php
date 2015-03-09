@@ -28,6 +28,13 @@ class Subcolumns
     protected static $name = 'bootstrap_customizable';
 
     /**
+     * Current column index.
+     *
+     * @var array
+     */
+    private static $currentColumn = array();
+
+    /**
      * Setup the subcolumns integration.
      *
      * @return void

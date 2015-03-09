@@ -111,6 +111,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
         (
             'title'                   => array('title', 'description', 'columns'),
             'columnset'               => array('sizes'),
+            'clearfix'                => array('clearfix'),
             'published'               => array('published'),
         )
     ),
@@ -161,7 +162,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'inputType'               => 'select',
             'options_callback'        => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
             'reference'               => &$GLOBALS['TL_LANG']['tl_columnset'],
-            'eval'                    => array('submitOnChange' => true),
+            'eval'                    => array('submitOnChange' => true, 'chosen' => true),
             'sql'                     => "int(10) unsigned NOT NULL default '0'"
         ),
 
@@ -174,6 +175,51 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'reference'               => &$GLOBALS['TL_LANG']['tl_columnset'],
             'eval'                    => array('multiple' => true, 'submitOnChange' => true),
             'sql'                     => "mediumblob NULL"
+        ),
+
+        'clearfix'                    => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
+            'exclude'       => true,
+            'inputType'     => 'multiColumnWizard',
+            'eval'          => array
+            (
+                'columnFields'       => array
+                (
+                    'column'  => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['column'],
+                        'inputType'        => 'select',
+                        'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnNumbers'),
+                        'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
+                    ),
+                    'xs' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['xs'],
+                        'inputType'        => 'checkbox',
+                        'eval'             => array('style' => 'width: 80px;', 'includeBlankOption' => true),
+                    ),
+                    'sm' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['sm'],
+                        'inputType'        => 'checkbox',
+                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
+                    ),
+                    'md' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['md'],
+                        'inputType'        => 'checkbox',
+                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
+                    ),
+                    'lg' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['lg'],
+                        'inputType'        => 'checkbox',
+                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
+                    ),
+                ),
+            ),
+            'sql'           => "blob NULL"
         ),
 
         'published' => array
@@ -209,21 +255,21 @@ $colSetTemplate = array
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['width'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getWidths'),
-                'eval'             => array('style' => 'width: 100px;'),
+                'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
             ),
             'offset' => array
             (
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['offset'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
-                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true),
+                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true, 'chosen' => true),
             ),
             'order'  => array
             (
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['order'],
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnOrders'),
-                'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true),
+                'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true, 'chosen' => true),
             ),
         ),
         'buttons'            => array('copy' => false, 'delete' => false),
