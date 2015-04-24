@@ -75,42 +75,16 @@ class Grid
             throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
         }
 
-        $columns = $result->columns;
-        $sizes   = deserialize($result->sizes, true);
-        $builder = GridBuilder::create();
+        $builder    = GridBuilder::create();
+        $classes    = array();
 
-        for ($i = 0; $i < $columns; $i++) {
-            $column = $builder->addColumn();
-
-            foreach ($sizes as $size) {
-                $key    = 'columnset_' . $size;
-                $values = deserialize($result->$key, true);
-
-                $column->forDevice(
-                    $size,
-                    $values[$i]['width'],
-                    $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null
-                );
-            }
+        foreach (deserialize($result->customClasses, true) as $class) {
+            $classes[$class['column']] = $class['class'];
         }
 
-        $grid       = $builder->build();
-        $clearFixes = deserialize($result->clearfix, true);
+        $grid = self::buildGridColumns($builder, $result, $classes);
 
-        foreach ($clearFixes as $fix) {
-            $fixes = array();
-
-            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
-                if ($fix[$size]) {
-                    $fixes[] = $size;
-                }
-            }
-
-            if ($fixes) {
-                $grid->addClearFixes(($fix['column'] - 1), $fixes);
-            }
-        }
+        self::buildClearfixes($grid, $result);
 
         static::$gridsFromDb[$gridId] = $grid;
 
@@ -237,5 +211,70 @@ class Grid
                 $this->getClearfixes($index)
             )
         );
+    }
+
+    /**
+     * Build columns.
+     *
+     * @param GridBuilder      $builder The grid builder.
+     * @param \Database\Result $result  The database result.
+     * @param array            $classes Custom css classes.
+     *
+     * @return Grid
+     */
+    private static function buildGridColumns($builder, $result, $classes)
+    {
+        $columns = $result->columns;
+        $sizes   = deserialize($result->sizes, true);
+
+        for ($i = 0; $i < $columns; $i++) {
+            $column = $builder->addColumn();
+
+            foreach ($sizes as $size) {
+                $key    = 'columnset_' . $size;
+                $values = deserialize($result->$key, true);
+
+                $column->forDevice(
+                    $size,
+                    $values[$i]['width'],
+                    $values[$i]['offset'] ?: null,
+                    $values[$i]['order'] ?: null
+                );
+
+                $index = ($i + 1);
+
+                if (!empty($classes[$index])) {
+                    $column->setClass($classes[$index]);
+                }
+            }
+        }
+
+        return $builder->build();
+    }
+
+    /**
+     * Build The clearfixes.
+     *
+     * @param Grid             $grid   The grid.
+     * @param \Database\Result $result The database result.
+     *
+     * @return void
+     */
+    private static function buildClearfixes($grid, $result)
+    {
+        $clearFixes = deserialize($result->clearfix, true);
+        foreach ($clearFixes as $fix) {
+            $fixes = array();
+
+            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+                if ($fix[$size]) {
+                    $fixes[] = $size;
+                }
+            }
+
+            if ($fixes) {
+                $grid->addClearFixes(($fix['column'] - 1), $fixes);
+            }
+        }
     }
 }

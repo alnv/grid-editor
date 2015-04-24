@@ -112,6 +112,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'title'                   => array('title', 'description', 'columns'),
             'columnset'               => array('sizes'),
             'clearfix'                => array('clearfix'),
+            'expert'                  => array(':hide', 'customClasses'),
             'published'               => array('published'),
         )
     ),
@@ -179,7 +180,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
 
         'clearfix'                    => array
         (
-            'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
+            'label'         => &$GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
             'exclude'       => true,
             'inputType'     => 'multiColumnWizard',
             'eval'          => array
@@ -216,6 +217,33 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
                         'label'            => $GLOBALS['TL_LANG']['tl_columnset']['lg'],
                         'inputType'        => 'checkbox',
                         'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
+                    ),
+                ),
+            ),
+            'sql'           => "blob NULL"
+        ),
+
+        'customClasses'                    => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['customClasses'],
+            'exclude'       => true,
+            'inputType'     => 'multiColumnWizard',
+            'eval'          => array
+            (
+                'columnFields'       => array
+                (
+                    'column'  => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['column'],
+                        'inputType'        => 'select',
+                        'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnNumbers'),
+                        'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
+                    ),
+                    'class' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['class'],
+                        'inputType'        => 'text',
+                        'eval'             => array('style' => 'width: 260px;'),
                     ),
                 ),
             ),

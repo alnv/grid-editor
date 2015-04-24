@@ -250,6 +250,8 @@ class ColumnSet extends \Backend
     /**
      * Get column numbers.
      *
+     * @param \DataContainer $dataContainer Data container driver.
+     *
      * @return array
      */
     public function getColumnNumbers($dataContainer)
