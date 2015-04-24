@@ -14,7 +14,6 @@
 $GLOBALS['TL_LANG']['tl_columnset']['title_legend']     = 'Title';
 $GLOBALS['TL_LANG']['tl_columnset']['columnset_legend'] = 'Column definitions';
 $GLOBALS['TL_LANG']['tl_columnset']['published_legend'] = 'Published';
-$GLOBALS['TL_LANG']['tl_columnset']['clearfix_legend']  = 'Responsive column resets';
 $GLOBALS['TL_LANG']['tl_columnset']['expert_legend']    = 'Expert settings';
 
 /**

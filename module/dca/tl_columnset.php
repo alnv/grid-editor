@@ -111,8 +111,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
         (
             'title'                   => array('title', 'description', 'columns'),
             'columnset'               => array('sizes'),
-            'clearfix'                => array('clearfix'),
-            'expert'                  => array(':hide', 'customClasses'),
+            'expert'                  => array(':hide', 'clearfix', 'customClasses'),
             'published'               => array('published'),
         )
     ),
