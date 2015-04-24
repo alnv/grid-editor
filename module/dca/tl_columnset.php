@@ -111,6 +111,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
         (
             'title'                   => array('title', 'description', 'columns'),
             'columnset'               => array('sizes'),
+            'expert'                  => array(':hide', 'customClasses'),
             'published'               => array('published'),
         )
     ),
@@ -174,6 +175,33 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'reference'               => &$GLOBALS['TL_LANG']['tl_columnset'],
             'eval'                    => array('multiple' => true, 'submitOnChange' => true),
             'sql'                     => "mediumblob NULL"
+        ),
+
+        'customClasses'                    => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['customClasses'],
+            'exclude'       => true,
+            'inputType'     => 'multiColumnWizard',
+            'eval'          => array
+            (
+                'columnFields'       => array
+                (
+                    'column'  => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['column'],
+                        'inputType'        => 'select',
+                        'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnNumbers'),
+                        'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
+                    ),
+                    'class' => array
+                    (
+                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['class'],
+                        'inputType'        => 'text',
+                        'eval'             => array('style' => 'width: 260px;'),
+                    ),
+                ),
+            ),
+            'sql'           => "blob NULL"
         ),
 
         'published' => array

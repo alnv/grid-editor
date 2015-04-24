@@ -68,25 +68,14 @@ class Grid
             throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
         }
 
-        $columns = $result->columns;
-        $sizes   = deserialize($result->sizes, true);
         $builder = GridBuilder::create();
+        $classes = array();
 
-        for ($i = 0; $i < $columns; $i++) {
-            $column = $builder->addColumn();
-
-            foreach ($sizes as $size) {
-                $key    = 'columnset_' . $size;
-                $values = deserialize($result->$key, true);
-
-                $column->forDevice(
-                    $size,
-                    $values[$i]['width'],
-                    $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null
-                );
-            }
+        foreach (deserialize($result->customClasses, true) as $class) {
+            $classes[$class['column']] = $class['class'];
         }
+
+        self::buildColumns($builder, $result, $classes);
 
         static::$gridsFromDb[$gridId] = $builder->build();
 
@@ -159,5 +148,42 @@ class Grid
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * Build columns.
+     *
+     * @param GridBuilder      $builder The grid builder.
+     * @param \Database\Result $result  The database result.
+     * @param array            $classes Custom css classes.
+     *
+     * @return void
+     */
+    private static function buildColumns($builder, $result, $classes)
+    {
+        $columns = $result->columns;
+        $sizes   = deserialize($result->sizes, true);
+
+        for ($i = 0; $i < $columns; $i++) {
+            $column = $builder->addColumn();
+
+            foreach ($sizes as $size) {
+                $key    = 'columnset_' . $size;
+                $values = deserialize($result->$key, true);
+
+                $column->forDevice(
+                    $size,
+                    $values[$i]['width'],
+                    $values[$i]['offset'] ?: null,
+                    $values[$i]['order'] ?: null
+                );
+
+                $index = ($i + 1);
+
+                if (!empty($classes[$index])) {
+                    $column->setClass($classes[$index]);
+                }
+            }
+        }
     }
 }

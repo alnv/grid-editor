@@ -32,6 +32,13 @@ class Column
     protected $sizes = array();
 
     /**
+     * Custom css class.
+     *
+     * @var string
+     */
+    protected $class = '';
+
+    /**
      * The grid builder.
      *
      * @var GridBuilder
@@ -46,6 +53,30 @@ class Column
     public function __construct(GridBuilder $builder)
     {
         $this->builder = $builder;
+    }
+
+    /**
+     * Get custom css class.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * Set custom css class class.
+     *
+     * @param string $class The css class.
+     *
+     * @return $this
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+
+        return $this;
     }
 
     /**
@@ -123,6 +154,10 @@ class Column
                     $classes[] = sprintf('col-%s-%s', $device, $size['push']);
                 }
             }
+        }
+
+        if ($this->class) {
+            $classes[] = $this->class;
         }
 
         return $classes;
