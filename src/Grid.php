@@ -28,7 +28,7 @@ class Grid
     /**
      * Clearfixes after for each column.
      *
-     * @var
+     * @var array
      */
     private $clearfixes = array();
 
@@ -75,8 +75,8 @@ class Grid
             throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
         }
 
-        $builder    = GridBuilder::create();
-        $classes    = array();
+        $builder = GridBuilder::create();
+        $classes = array();
 
         foreach (deserialize($result->customClasses, true) as $class) {
             $classes[$class['column']] = $class['class'];
@@ -193,7 +193,7 @@ class Grid
     /**
      * Get clearfixes as string.
      *
-     * @param $index
+     * @param int $index Column index.
      *
      * @return string
      */
