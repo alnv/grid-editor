@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
         (
             'title'                   => array('title', 'description', 'columns'),
             'columnset'               => array('sizes'),
-            'expert'                  => array(':hide', 'clearfix', 'customClasses'),
+            'expert'                  => array(':hide', 'clearfix', 'rowClass', 'customClasses'),
             'published'               => array('published'),
         )
     ),
@@ -247,6 +247,17 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
                 ),
             ),
             'sql'           => "blob NULL"
+        ),
+
+        'rowClass' => array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['rowClass'],
+            'exclude'                 => true,
+            'default'                 => '',
+            'inputType'               => 'text',
+            'reference'               => &$GLOBALS['TL_LANG']['tl_columnset'],
+            'eval'                    => array(),
+            'sql'                     => "varchar(64) NOT NULL default ''"
         ),
 
         'published' => array

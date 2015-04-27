@@ -33,6 +33,13 @@ class Grid
     private $clearfixes = array();
 
     /**
+     * Custom row class.
+     *
+     * @var string
+     */
+    private $rowClass;
+
+    /**
      * Database created grids.
      *
      * @var array
@@ -83,6 +90,7 @@ class Grid
         }
 
         $grid = self::buildGridColumns($builder, $result, $classes);
+        $grid->setRowClass($result->rowClass);
 
         self::buildClearfixes($grid, $result);
 
@@ -211,6 +219,30 @@ class Grid
                 $this->getClearfixes($index)
             )
         );
+    }
+
+    /**
+     * Get rowClass.
+     *
+     * @return string
+     */
+    public function getRowClass()
+    {
+        return $this->rowClass;
+    }
+
+    /**
+     * Set rowClass.
+     *
+     * @param string $rowClass RowClass.
+     *
+     * @return $this
+     */
+    public function setRowClass($rowClass)
+    {
+        $this->rowClass = $rowClass;
+
+        return $this;
     }
 
     /**

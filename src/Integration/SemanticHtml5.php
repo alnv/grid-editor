@@ -233,7 +233,13 @@ SQL;
                 return;
             }
 
-            $template->class .= ($template->class ? ' ' : '') . 'row';
+            $class = ($template->class ? ' ' : '') . 'row';
+
+            if (static::$grids[$template->id]->getRowClass()) {
+                $class .= ' ' . static::$grids[$template->id]->getRowClass();
+            }
+
+            $template->class .= $class;
         }
     }
 

@@ -50,7 +50,8 @@ class Walker
         $this->index = 0;
 
         return sprintf(
-            '<div class="row">%s%s<div class="%s">%s',
+            '<div class="row%s">%s%s<div class="%s">%s',
+            $this->grid->getRowClass() ? (' ' . $this->grid->getRowClass()) : '',
             PHP_EOL,
             $this->grid->getClearFixesAsString($this->index),
             $this->grid->getColumnAsString($this->index),

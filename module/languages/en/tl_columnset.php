@@ -61,6 +61,9 @@ $GLOBALS['TL_LANG']['tl_columnset']['clearfix'][1] = 'Force column resets by add
 $GLOBALS['TL_LANG']['tl_columnset']['column'][0] = 'Column';
 $GLOBALS['TL_LANG']['tl_columnset']['column'][1] = 'Column number.';
 
+$GLOBALS['TL_LANG']['tl_columnset']['rowClass'][0] = 'Row class';
+$GLOBALS['TL_LANG']['tl_columnset']['rowClass'][1] = 'Add a custom row class. It\'s added to the <em>row</em> class.';
+
 $GLOBALS['TL_LANG']['tl_columnset']['customClasses'][0] = 'Custom classes';
 $GLOBALS['TL_LANG']['tl_columnset']['customClasses'][1] = 'You can define custom css classes for each row';
 
