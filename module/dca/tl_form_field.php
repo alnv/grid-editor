@@ -16,8 +16,12 @@ if(\Netzmacht\Bootstrap\Grid\Integration\Subcolumns::isActive()) {
 /**
  * fields
  */
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['fsc_type']['options_callback'] = array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getAllTypes');
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['fsc_type']['eval']['submitOnChange'] = true;
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['fsc_type']['eval']['includeBlankOption'] = true;
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['fsc_type']['eval']['submitOnChange']     = true;
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['fsc_type']['options_callback']           = array(
+    'Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 
+    'getAllTypes'
+);
 
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['bootstrap_grid'] = array
 (
