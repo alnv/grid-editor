@@ -136,14 +136,14 @@ class Subcolumns
     public function hookLoadFormField($widget)
     {
         if ($widget->type === 'formcolstart') {
-            $type   = $widget->sc_type;
+            $type   = $widget->fsc_type;
             $gridId = $widget->bootstrap_grid;
 
             $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
 
         } elseif ($widget->type === 'formcolpart' || $widget->type === 'formcolend') {
             $parent = \FormFieldModel::findByPk($widget->fsc_parent);
-            $type   = $parent->sc_type;
+            $type   = $parent->fsc_type;
             $gridId = $parent->bootstrap_grid;
 
             $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
