@@ -18,4 +18,4 @@ It provides three integrations
 Known limitations
 -----------------
 
-The grid reset feature does not work for subcolumns forms and subcolumns module.
+The grid reset feature does not work for and subcolumns module.

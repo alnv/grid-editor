@@ -11,5 +11,6 @@ TemplateLoader::addFiles(
     array(
        'be_subcolumns_bootstrap' => 'system/modules/bootstrap-grid/templates',
        'ce_colsetPart'           => 'system/modules/bootstrap-grid/templates',
+       'form_colset'             => 'system/modules/bootstrap-grid/templates',
     )
 );
