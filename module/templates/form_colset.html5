@@ -1,3 +1,4 @@
+<?php if ($this->type === 'formcolpart') : ?>
 <?php if($this->useInside): ?>
 		</div>
 		<?php endif; ?>
@@ -6,7 +7,10 @@
 <?php $parent = \FormFieldModel::findByPk($this->fsc_parent); ?>
 <?php $grid   = \Netzmacht\Bootstrap\Grid\Grid::loadFromDatabase($parent->bootstrap_grid); ?>
 <?php echo $grid->getClearFixesAsString($this->fsc_sortid); ?>
-<div class="<?php echo $this->class; ?> <?php echo $grid->getColumnAsString($this->fsc_sorting +1); ?>"<?php echo $this->cssID; ?>>
+<div class="<?php echo $this->class; ?> <?php echo $grid->getColumnAsString($this->fsc_sorting); ?>"<?php echo $this->cssID; ?>>
 <?php if($this->useInside): ?>
     <div class="<?php echo $this->inside; ?>"<?php if ($this->gap['left'] || $this->gap['right']) : ?> style="<?php if ($this->gap['right']) : ?>padding-right:<?php echo $this->gap['right']; ?>;<?php endif; ?><?php if ($this->gap['left']) : ?>padding-left:<?php echo $this->gap['left']; ?>;<?php endif; ?>"<?php endif; ?>>
 <?php endif; ?>
+<?php else:
+    echo $this->generate();
+endif; ?>
