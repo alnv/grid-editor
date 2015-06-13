@@ -13,9 +13,3 @@ It provides three integrations
  * felixpfeiffer/subcolumns
  * menatwork/semantic_html5
  * InsertTag {{grid}}
-
-
-Known limitations
------------------
-
-The grid reset feature does not work for and subcolumns module.
