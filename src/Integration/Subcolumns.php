@@ -200,7 +200,7 @@ class Subcolumns
         $model = $event->getModel();
         $grids = $event->getGrids();
 
-        if ($model->type == 'colsetStart' || $model->type == 'submcolumns') {
+        if ($model->type == 'colsetStart' || $model->type == 'subcolumns') {
             $query   = 'SELECT * FROM tl_columnset WHERE published=1 AND columns=? ORDER BY title';
             $columns = $model->sc_type;
             $result  = \Database::getInstance()
