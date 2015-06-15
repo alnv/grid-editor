@@ -102,12 +102,14 @@ class Grid
     /**
      * Add a column.
      *
-     * @param array $column The column definition.
+     * @param array $column     The column definition.
+     * @param array $clearFixes The clear fixes.
      *
      * @return $this
      */
-    public function addColumn(array $column)
+    public function addColumn(array $column, $clearFixes = array())
     {
+        $this->addClearFixes(count($this->columns), $clearFixes);
         $this->columns[] = $column;
 
         return $this;
@@ -184,7 +186,7 @@ class Grid
         if (!in_array($size, $this->clearfixes[$size])) {
             $this->clearfixes[$column][] = $size;
         }
-        
+
         return $this;
     }
 
@@ -312,7 +314,8 @@ class Grid
                     $size,
                     $values[$i]['width'],
                     $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null
+                    $values[$i]['order'] ?: null,
+                    (bool) $values[$i]['clearfix']
                 );
 
                 $index = ($i + 1);

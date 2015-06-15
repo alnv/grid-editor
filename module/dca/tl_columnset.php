@@ -177,51 +177,6 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'sql'                     => "mediumblob NULL"
         ),
 
-        'clearfix'                    => array
-        (
-            'label'         => &$GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
-            'exclude'       => true,
-            'inputType'     => 'multiColumnWizard',
-            'eval'          => array
-            (
-                'columnFields'       => array
-                (
-                    'column'  => array
-                    (
-                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['column'],
-                        'inputType'        => 'select',
-                        'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnNumbers'),
-                        'eval'             => array('style' => 'width: 100px;', 'chosen' => true),
-                    ),
-                    'xs' => array
-                    (
-                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['xs'],
-                        'inputType'        => 'checkbox',
-                        'eval'             => array('style' => 'width: 80px;', 'includeBlankOption' => true),
-                    ),
-                    'sm' => array
-                    (
-                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['sm'],
-                        'inputType'        => 'checkbox',
-                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
-                    ),
-                    'md' => array
-                    (
-                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['md'],
-                        'inputType'        => 'checkbox',
-                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
-                    ),
-                    'lg' => array
-                    (
-                        'label'            => $GLOBALS['TL_LANG']['tl_columnset']['lg'],
-                        'inputType'        => 'checkbox',
-                        'eval'             => array('style' => 'width: 50px;', 'includeBlankOption' => true),
-                    ),
-                ),
-            ),
-            'sql'           => "blob NULL"
-        ),
-
         'customClasses'                    => array
         (
             'label'                   => &$GLOBALS['TL_LANG']['tl_columnset']['customClasses'],
@@ -308,6 +263,12 @@ $colSetTemplate = array
                 'inputType'        => 'select',
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnOrders'),
                 'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true, 'chosen' => true),
+            ),
+            'clearfix' => array
+            (
+                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
+                'inputType'        => 'checkbox',
+                'eval'             => array('style' => 'width: 80px;', 'includeBlankOption' => true),
             ),
         ),
         'buttons'            => array('copy' => false, 'delete' => false),

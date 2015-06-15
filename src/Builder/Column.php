@@ -46,6 +46,13 @@ class Column
     protected $builder;
 
     /**
+     * Column resets.
+     *
+     * @var array
+     */
+    private $clearFixes = array();
+
+    /**
      * Construct.
      *
      * @param GridBuilder $builder The grid builder.
@@ -82,16 +89,21 @@ class Column
     /**
      * Create a column for a device.
      *
-     * @param string   $device The device name.
-     * @param int      $width  The column width.
-     * @param int|null $offset Optional offset.
-     * @param int|null $push   Optional push.
+     * @param string   $device   The device name.
+     * @param int      $width    The column width.
+     * @param int|null $offset   Optional offset.
+     * @param int|null $push     Optional push.
+     * @param bool     $clearFix Reset columns.
      *
      * @return $this
      */
-    public function forDevice($device, $width, $offset = null, $push = null)
+    public function forDevice($device, $width, $offset = null, $push = null, $clearFix = false)
     {
         $this->sizes[$device] = array('width' => $width, 'offset' => $offset, 'push' => $push);
+
+        if ($clearFix) {
+            $this->clearFixes[] = $device;
+        }
 
         return $this;
     }
@@ -110,6 +122,16 @@ class Column
         }
 
         return null;
+    }
+
+    /**
+     * Get column reset clear fixes.
+     *
+     * @return array
+     */
+    public function getClearFixes()
+    {
+        return $this->clearFixes;
     }
 
     /**
