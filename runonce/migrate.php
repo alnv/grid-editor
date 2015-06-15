@@ -19,6 +19,11 @@ class migrate
     private $database;
 
     /**
+     * @var
+     */
+    private $previousErrorHandler;
+
+    /**
      * Column sizes used for migration.
      *
      * @var array
@@ -40,8 +45,37 @@ class migrate
      */
     public function run()
     {
+        /*
+         * Error handler of composer plugin is broken. use our own instead
+         * @see #contao-community-alliance/composer-plugin/issues/14
+         */
+        $this->previousErrorHandler = set_error_handler(array($this, 'handleError'), E_ALL);
+
         $this->migrateFromLegacy();
         $this->migrateColumnResets();
+
+        set_error_handler($this->previousErrorHandler);
+    }
+
+    /**
+     * Handle errors properly as a workaround of the broken cca/composer-plugin error handler.
+     *
+     * @param int    $errno   Contains the level of the error raised, as an integer.
+     * @param string $errstr  The error message.
+     * @param string $errfile The file in which the error occured.
+     * @param int    $errline The line in the file on which the error occured.
+     *
+     * @return void
+     *
+     * @throws \ErrorException Always, the error converted to an ErrorException.
+     */
+    public function handleError($errno, $errstr, $errfile, $errline)
+    {
+        if ($errno === E_NOTICE) {
+            return;
+        }
+
+        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
     /**
@@ -94,7 +128,7 @@ class migrate
 
             // Check definitions
             foreach ($resets as $size => $columns) {
-                $dbColumn   = 'columnset_' . $size;
+                $dbColumn = 'columnset_' . $size;
 
                 if (!isset($values[$dbColumn])) {
                     $values[$dbColumn] = deserialize($result->$dbColumn, true);
