@@ -168,6 +168,27 @@ class Grid
     }
 
     /**
+     * Add column clear fix for a specific column and size.
+     *
+     * @param int    $column The column index.
+     * @param string $size   The grid size.
+     *
+     * @return $this
+     */
+    public function addClearFix($column, $size)
+    {
+        if (!isset($this->clearfixes[$column])) {
+            $this->clearfixes[$column] = array();
+        }
+
+        if (!in_array($size, $this->clearfixes[$size])) {
+            $this->clearfixes[$column][] = $size;
+        }
+        
+        return $this;
+    }
+
+    /**
      * Add clear fix for a column.
      *
      * @param int   $column The column index.
@@ -177,7 +198,11 @@ class Grid
      */
     public function addClearFixes($column, array $sizes)
     {
-        $this->clearfixes[$column] = $sizes;
+        if (!isset($this->clearfixes[$column])) {
+            $this->clearfixes[$column] = $sizes;
+        } else {
+            $this->clearfixes[$column] = array_unique(array_merge($this->clearfixes[$column], $sizes));
+        }
 
         return $this;
     }
@@ -196,6 +221,23 @@ class Grid
         }
 
         return array();
+    }
+
+    /**
+     * Check if column as a clear fix for a specific size.
+     *
+     * @param int    $column The column index.
+     * @param string $size   The grid column size.
+     *
+     * @return bool
+     */
+    public function hasClearFixForSize($column, $size)
+    {
+        if (!isset($this->clearfixes[$column])) {
+            return false;
+        }
+
+        return in_array($size, $this->clearfixes[$column]);
     }
 
     /**
