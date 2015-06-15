@@ -26,11 +26,11 @@ class Grid
     protected $columns = array();
 
     /**
-     * Clearfixes after for each column.
+     * Column resets after for each column.
      *
      * @var array
      */
-    private $clearfixes = array();
+    private $columnResets = array();
 
     /**
      * Custom row class.
@@ -92,8 +92,6 @@ class Grid
         $grid = self::buildGridColumns($builder, $result, $classes);
         $grid->setRowClass($result->rowClass);
 
-        self::buildClearfixes($grid, $result);
-
         static::$gridsFromDb[$gridId] = $grid;
 
         return static::$gridsFromDb[$gridId];
@@ -102,14 +100,14 @@ class Grid
     /**
      * Add a column.
      *
-     * @param array $column     The column definition.
-     * @param array $clearFixes The clear fixes.
+     * @param array $column The column definition.
+     * @param array $resets The column resets.
      *
      * @return $this
      */
-    public function addColumn(array $column, $clearFixes = array())
+    public function addColumn(array $column, $resets = array())
     {
-        $this->addClearFixes(count($this->columns), $clearFixes);
+        $this->addColumnResets(count($this->columns), $resets);
         $this->columns[] = $column;
 
         return $this;
@@ -177,14 +175,14 @@ class Grid
      *
      * @return $this
      */
-    public function addClearFix($column, $size)
+    public function addColumnReset($column, $size)
     {
-        if (!isset($this->clearfixes[$column])) {
-            $this->clearfixes[$column] = array();
+        if (!isset($this->columnResets[$column])) {
+            $this->columnResets[$column] = array();
         }
 
-        if (!in_array($size, $this->clearfixes[$size])) {
-            $this->clearfixes[$column][] = $size;
+        if (!in_array($size, $this->columnResets[$size])) {
+            $this->columnResets[$column][] = $size;
         }
 
         return $this;
@@ -198,28 +196,28 @@ class Grid
      *
      * @return $this
      */
-    public function addClearFixes($column, array $sizes)
+    public function addColumnResets($column, array $sizes)
     {
-        if (!isset($this->clearfixes[$column])) {
-            $this->clearfixes[$column] = $sizes;
+        if (!isset($this->columnResets[$column])) {
+            $this->columnResets[$column] = $sizes;
         } else {
-            $this->clearfixes[$column] = array_unique(array_merge($this->clearfixes[$column], $sizes));
+            $this->columnResets[$column] = array_unique(array_merge($this->columnResets[$column], $sizes));
         }
 
         return $this;
     }
 
     /**
-     * Get clearfix for a column.
+     * Get resets for a column.
      *
-     * @param int $index The column clearfix.
+     * @param int $index The column index.
      *
      * @return array
      */
-    public function getClearFixes($index)
+    public function getColumnResets($index)
     {
-        if (isset($this->clearfixes[$index])) {
-            return $this->clearfixes[$index];
+        if (isset($this->columnResets[$index])) {
+            return $this->columnResets[$index];
         }
 
         return array();
@@ -233,23 +231,23 @@ class Grid
      *
      * @return bool
      */
-    public function hasClearFixForSize($column, $size)
+    public function hasColumnResetForSize($column, $size)
     {
-        if (!isset($this->clearfixes[$column])) {
+        if (!isset($this->columnResets[$column])) {
             return false;
         }
 
-        return in_array($size, $this->clearfixes[$column]);
+        return in_array($size, $this->columnResets[$column]);
     }
 
     /**
-     * Get clearfixes as string.
+     * Get column resets as string.
      *
      * @param int $index Column index.
      *
      * @return string
      */
-    public function getClearFixesAsString($index)
+    public function getColumnResetsAsString($index)
     {
         return implode(
             PHP_EOL,
@@ -260,7 +258,7 @@ class Grid
                         $item
                     );
                 },
-                $this->getClearfixes($index)
+                $this->getColumnResets($index)
             )
         );
     }
@@ -315,7 +313,7 @@ class Grid
                     $values[$i]['width'],
                     $values[$i]['offset'] ?: null,
                     $values[$i]['order'] ?: null,
-                    (bool) $values[$i]['clearfix']
+                    (bool) $values[$i]['reset']
                 );
 
                 $index = ($i + 1);
@@ -327,31 +325,5 @@ class Grid
         }
 
         return $builder->build();
-    }
-
-    /**
-     * Build The clearfixes.
-     *
-     * @param Grid             $grid   The grid.
-     * @param \Database\Result $result The database result.
-     *
-     * @return void
-     */
-    private static function buildClearfixes($grid, $result)
-    {
-        $clearFixes = deserialize($result->clearfix, true);
-        foreach ($clearFixes as $fix) {
-            $fixes = array();
-
-            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
-                if ($fix[$size]) {
-                    $fixes[] = $size;
-                }
-            }
-
-            if ($fixes) {
-                $grid->addClearFixes(($fix['column'] - 1), $fixes);
-            }
-        }
     }
 }

@@ -150,7 +150,7 @@ class SemanticHtml5
             // Index is already incremented, so go back
             $index = (static::$count[$row] - 1);
 
-            $buffer = $grid->getClearFixesAsString($index) . $buffer;
+            $buffer = $grid->getColumnResetsAsString($index) . $buffer;
         }
 
         return $buffer;

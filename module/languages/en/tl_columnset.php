@@ -55,8 +55,8 @@ $GLOBALS['TL_LANG']['tl_columnset']['offset'][1] = 'You can define an offset to 
 $GLOBALS['TL_LANG']['tl_columnset']['order'][0] = 'Ordering';
 $GLOBALS['TL_LANG']['tl_columnset']['order'][1] = 'You can use the pull and push beheavior (Bootstrap does not provide this for extra small devices).';
 
-$GLOBALS['TL_LANG']['tl_columnset']['clearfix'][0] = 'Column resets';
-$GLOBALS['TL_LANG']['tl_columnset']['clearfix'][1] = 'Force column resets by adding clearfix for a specific column.';
+$GLOBALS['TL_LANG']['tl_columnset']['reset'][0] = 'Reset column';
+$GLOBALS['TL_LANG']['tl_columnset']['reset'][1] = 'Force column reset by adding clearfix for the column.';
 
 $GLOBALS['TL_LANG']['tl_columnset']['column'][0] = 'Column';
 $GLOBALS['TL_LANG']['tl_columnset']['column'][1] = 'Column number.';

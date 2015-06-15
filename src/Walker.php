@@ -53,7 +53,7 @@ class Walker
             '<div class="row%s">%s%s<div class="%s">%s',
             $this->grid->getRowClass() ? (' ' . $this->grid->getRowClass()) : '',
             PHP_EOL,
-            $this->grid->getClearFixesAsString($this->index),
+            $this->grid->getColumnResetsAsString($this->index),
             $this->grid->getColumnAsString($this->index),
             PHP_EOL
         );
@@ -76,7 +76,7 @@ class Walker
             '%s</div>%s%s<div class="%s">%s',
             PHP_EOL,
             PHP_EOL,
-            $this->grid->getClearFixesAsString($this->index),
+            $this->grid->getColumnResetsAsString($this->index),
             $this->grid->getColumnAsString($this->index),
             PHP_EOL
         );

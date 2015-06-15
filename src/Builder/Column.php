@@ -50,7 +50,7 @@ class Column
      *
      * @var array
      */
-    private $clearFixes = array();
+    private $resets = array();
 
     /**
      * Construct.
@@ -89,20 +89,20 @@ class Column
     /**
      * Create a column for a device.
      *
-     * @param string   $device   The device name.
-     * @param int      $width    The column width.
-     * @param int|null $offset   Optional offset.
-     * @param int|null $push     Optional push.
-     * @param bool     $clearFix Reset columns.
+     * @param string   $device The device name.
+     * @param int      $width  The column width.
+     * @param int|null $offset Optional offset.
+     * @param int|null $push   Optional push.
+     * @param bool     $resets Reset columns.
      *
      * @return $this
      */
-    public function forDevice($device, $width, $offset = null, $push = null, $clearFix = false)
+    public function forDevice($device, $width, $offset = null, $push = null, $resets = false)
     {
         $this->sizes[$device] = array('width' => $width, 'offset' => $offset, 'push' => $push);
 
-        if ($clearFix) {
-            $this->clearFixes[] = $device;
+        if ($resets) {
+            $this->resets[] = $device;
         }
 
         return $this;
@@ -125,13 +125,13 @@ class Column
     }
 
     /**
-     * Get column reset clear fixes.
+     * Get column resets.
      *
      * @return array
      */
-    public function getClearFixes()
+    public function getResets()
     {
-        return $this->clearFixes;
+        return $this->resets;
     }
 
     /**

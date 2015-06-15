@@ -70,7 +70,7 @@ class GridBuilder
         $grid = new Grid();
 
         foreach ($this->columns as $column) {
-            $grid->addColumn($column->build(), $column->getClearFixes());
+            $grid->addColumn($column->build(), $column->getResets());
         }
 
         return $grid;

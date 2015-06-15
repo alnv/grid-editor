@@ -264,9 +264,9 @@ $colSetTemplate = array
                 'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumnOrders'),
                 'eval'             => array('style' => 'width: 160px;', 'includeBlankOption' => true, 'chosen' => true),
             ),
-            'clearfix' => array
+            'reset' => array
             (
-                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['clearfix'],
+                'label'            => $GLOBALS['TL_LANG']['tl_columnset']['reset'],
                 'inputType'        => 'checkbox',
                 'eval'             => array('style' => 'width: 80px;', 'includeBlankOption' => true),
             ),
