@@ -1,7 +1,7 @@
 {
     "name":"contao-bootstrap/grid-editor",
     "description":"Backend grid editor for Contao CMS",
-    "keywords":["icons", "widget", "wizard", "contao", "dca"],
+    "keywords":["Contao", "Bootstrap", "Grid", "Grid editor", "Columns"],
     "type":"contao-module",
     "homepage":"http://netzmacht.de/erweiterungen/frontend/spaltenseteditor/",
     "license":"LGPL-3.0+",
