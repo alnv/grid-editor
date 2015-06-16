@@ -49,12 +49,12 @@ class migrate
          * Error handler of composer plugin is broken. use our own instead
          * @see #contao-community-alliance/composer-plugin/issues/14
          */
-        $this->previousErrorHandler = set_error_handler(array($this, 'handleError'), E_ALL);
+        set_error_handler(array($this, 'handleError'), E_ALL);
 
         $this->migrateFromLegacy();
         $this->migrateColumnResets();
 
-        set_error_handler($this->previousErrorHandler);
+        restore_error_handler();
     }
 
     /**
