@@ -45,8 +45,8 @@ class Walker
      */
     public function __construct(Grid $grid, $classesOnly = false)
     {
-        $this->grid = $grid;
-        $this->grid = $classesOnly;
+        $this->grid        = $grid;
+        $this->classesOnly = $classesOnly;
     }
 
     /**
