@@ -10,14 +10,15 @@
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
 use Netzmacht\Bootstrap\Core\Event\ReplaceInsertTagsEvent;
-use Netzmacht\Bootstrap\Grid\Grid;
+use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Walker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class InsertTag provides an insert tag integration for the grids.
  *
- * {{grid::IDENTIFIER::start::COLUMNSET_ID}}
+ * {{grid::IDENTIFIER::begin::COLUMNSET_ID}}
+ * {{grid::IDENTIFIER::begin::COLUMNSET_ID::infinite}}
  * {{grid::IDENTIFIER}}
  * {{grid::IDENTIFIER::end}}
  *
@@ -102,10 +103,10 @@ class InsertTag implements EventSubscriberInterface
         $identifier = $event->getParam(0);
 
         if (!isset(static::$walkers[$identifier])) {
-            $columnSetId = $this->getColumnSetId($event);
+            list($columnSetId, $infinite) = $this->translateParams($event);
 
             try {
-                static::$walkers[$identifier] = new Walker(Grid::loadFromDatabase($columnSetId));
+                static::$walkers[$identifier] = new Walker(Factory::createById($columnSetId), false, $infinite);
             } catch (\Exception $e) {
                 return null;
             }
@@ -115,22 +116,25 @@ class InsertTag implements EventSubscriberInterface
     }
 
     /**
-     * Get the column set id.
+     * Translate event params.
      *
      * @param ReplaceInsertTagsEvent $event The subscribed event.
      *
-     * @return null|string
+     * @return array
      */
-    private function getColumnSetId(ReplaceInsertTagsEvent $event)
+    private function translateParams(ReplaceInsertTagsEvent $event)
     {
+        $infinite    = false;
         $columnSetId = $event->getParam(0);
 
-        if ($event->getParam(1) == 'begin' && $event->getParam(2)) {
+        if ($event->getParam(1) === 'begin' && $event->getParam(2)) {
             $columnSetId = $event->getParam(2);
 
-            return $columnSetId;
+            if ($event->getParam(3)) {
+                $infinite = true;
+            }
         }
 
-        return $columnSetId;
+        return array($columnSetId, $infinite);
     }
 }
