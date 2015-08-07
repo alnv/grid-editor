@@ -9,8 +9,6 @@
 
 namespace Netzmacht\Bootstrap\Grid;
 
-use Netzmacht\Bootstrap\Grid\Builder\GridBuilder;
-
 /**
  * Class Grid stores the grid columns definitions.
  *
@@ -40,13 +38,6 @@ class Grid
     private $rowClass;
 
     /**
-     * Database created grids.
-     *
-     * @var array
-     */
-    private static $gridsFromDb = array();
-
-    /**
      * Construct.
      *
      * @param array $columns Column definitions.
@@ -66,43 +57,12 @@ class Grid
      * @return Grid
      *
      * @throws \InvalidArgumentException If grid is not defined.
+     *
+     * @deprecated Method get removed. Use the factory instead!
      */
     public static function loadFromDatabase($gridId)
     {
-        if (isset(static::$gridsFromDb[$gridId])) {
-            return static::$gridsFromDb[$gridId];
-        }
-
-        $result = \Database::getInstance()
-            ->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
-            ->limit(1)
-            ->execute($gridId);
-
-        if ($result->numRows < 1) {
-            throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
-        }
-
-        $builder = GridBuilder::create();
-        $classes = array();
-
-        foreach (deserialize($result->customClasses, true) as $class) {
-            $classes[$class['column']] = $class['class'];
-        }
-
-        $grid = self::buildGridColumns($builder, $result, $classes);
-        $grid->setRowClass($result->rowClass);
-
-        foreach (deserialize($result->resets, true) as $row) {
-            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
-                if (isset($row[$size]) && $row[$size]) {
-                    $grid->addColumnReset($row['column'], $size);
-                }
-            }
-        }
-
-        static::$gridsFromDb[$gridId] = $grid;
-
-        return static::$gridsFromDb[$gridId];
+        return Factory::createById($gridId);
     }
 
     /**
@@ -296,44 +256,5 @@ class Grid
         $this->rowClass = $rowClass;
 
         return $this;
-    }
-
-    /**
-     * Build columns.
-     *
-     * @param GridBuilder      $builder The grid builder.
-     * @param \Database\Result $result  The database result.
-     * @param array            $classes Custom css classes.
-     *
-     * @return Grid
-     */
-    private static function buildGridColumns($builder, $result, $classes)
-    {
-        $columns = $result->columns;
-        $sizes   = deserialize($result->sizes, true);
-
-        for ($i = 0; $i < $columns; $i++) {
-            $column = $builder->addColumn();
-
-            foreach ($sizes as $size) {
-                $key    = 'columnset_' . $size;
-                $values = deserialize($result->$key, true);
-
-                $column->forDevice(
-                    $size,
-                    $values[$i]['width'],
-                    $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null
-                );
-
-                $index = ($i + 1);
-
-                if (!empty($classes[$index])) {
-                    $column->setClass($classes[$index]);
-                }
-            }
-        }
-
-        return $builder->build();
     }
 }
