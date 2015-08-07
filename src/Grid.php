@@ -243,19 +243,24 @@ class Grid
     /**
      * Get column resets as string.
      *
-     * @param int $index Column index.
+     * @param int         $index Column index.
+     * @param string|null $tag   Custom html tag. Default divs are created.
      *
      * @return string
      */
-    public function getColumnResetsAsString($index)
+    public function getColumnResetsAsString($index, $tag = null)
     {
+        $tag = $tag ?: 'div';
+
         return implode(
             PHP_EOL,
             array_map(
-                function ($item) {
+                function ($item) use ($tag) {
                     return sprintf(
-                        '<div class="clearfix visible-%s-block"></div>' . PHP_EOL,
-                        $item
+                        '<%s class="clearfix visible-%s-block"></%s>' . PHP_EOL,
+                        $tag,
+                        $item,
+                        $tag
                     );
                 },
                 $this->getColumnResets($index)
