@@ -92,6 +92,14 @@ class Grid
         $grid = self::buildGridColumns($builder, $result, $classes);
         $grid->setRowClass($result->rowClass);
 
+        foreach (deserialize($result->resets, true) as $row) {
+            foreach (array('xs', 'sm', 'md', 'lg') as $size) {
+                if (isset($row[$size]) && $row[$size]) {
+                    $grid->addColumnReset($row['column'], $size);
+                }
+            }
+        }
+
         static::$gridsFromDb[$gridId] = $grid;
 
         return static::$gridsFromDb[$gridId];
@@ -101,13 +109,11 @@ class Grid
      * Add a column.
      *
      * @param array $column The column definition.
-     * @param array $resets The column resets.
      *
      * @return $this
      */
-    public function addColumn(array $column, $resets = array())
+    public function addColumn(array $column)
     {
-        $this->addColumnResets(count($this->columns), $resets);
         $this->columns[] = $column;
 
         return $this;
@@ -317,8 +323,7 @@ class Grid
                     $size,
                     $values[$i]['width'],
                     $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null,
-                    (bool) $values[$i]['reset']
+                    $values[$i]['order'] ?: null
                 );
 
                 $index = ($i + 1);

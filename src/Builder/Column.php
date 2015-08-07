@@ -102,10 +102,52 @@ class Column
         $this->sizes[$device] = array('width' => $width, 'offset' => $offset, 'push' => $push);
 
         if ($resets) {
+            $this->addReset($device);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add a reset for a device.
+     *
+     * @param string $device The device.
+     *
+     * @return $this
+     */
+    public function addReset($device)
+    {
+        if (!in_array($device, $this->resets)) {
             $this->resets[] = $device;
         }
 
         return $this;
+    }
+
+    /**
+     * Add reset device sizes.
+     *
+     * @param array $devices The device sizes.
+     *
+     * @return $this
+     */
+    public function addResets(array $devices)
+    {
+        foreach ($devices as $device) {
+            $this->addReset($device);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get column resets.
+     *
+     * @return array
+     */
+    public function getResets()
+    {
+        return $this->resets;
     }
 
     /**
@@ -122,16 +164,6 @@ class Column
         }
 
         return null;
-    }
-
-    /**
-     * Get column resets.
-     *
-     * @return array
-     */
-    public function getResets()
-    {
-        return $this->resets;
     }
 
     /**
