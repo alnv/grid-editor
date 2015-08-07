@@ -84,7 +84,7 @@ class Walker
      */
     public function begin()
     {
-        $this->index = 0;
+        $this->index         = 0;
         $this->infiniteIndex = 0;
 
         if ($this->classesOnly) {
