@@ -11,6 +11,7 @@ namespace Netzmacht\Bootstrap\Grid\Integration;
 
 use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
+use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Grid;
 
 /**
@@ -252,7 +253,7 @@ class Subcolumns
      */
     private function updateSubcolumnsDefinition($gridId, $type)
     {
-        $grid = Grid::loadFromDatabase($gridId);
+        $grid = Factory::createById($gridId);
 
         $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($grid);
 

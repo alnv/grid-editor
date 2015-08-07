@@ -5,7 +5,7 @@
 <!-- <?php echo $this->colID ?> Column //-->
 <?php $parent = \ContentModel::findByPk($this->sc_parent); ?>
 <?php if ($parent): ?>
-    <?php $grid = \Netzmacht\Bootstrap\Grid\Grid::loadFromDatabase($parent->bootstrap_grid); ?>
+    <?php $grid = \Netzmacht\Bootstrap\Grid\Factory::createById(($parent->bootstrap_grid)); ?>
     <?php echo $grid->getColumnResetsAsString($this->sc_sortid); ?>
 <?php endif; ?>
 <div class="<?php echo $this->class; ?> <?php echo $this->column; ?>"<?php echo $this->cssID; ?>>

@@ -10,6 +10,7 @@
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
+use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Grid;
 
 /**
@@ -225,7 +226,7 @@ SQL;
         // semantic html5 element is marked as beginning of new grid row
         if ($template->bootstrap_isGridElement == 'row') {
             try {
-                static::$grids[$template->id] = Grid::loadFromDatabase($template->bootstrap_grid);
+                static::$grids[$template->id] = Factory::createById($template->bootstrap_grid);
                 static::$count[$template->id] = 0;
             } catch (\InvalidArgumentException $e) {
                 echo $e->getMessage();
