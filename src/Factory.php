@@ -119,7 +119,7 @@ class Factory
         foreach (deserialize($result->resets, true) as $row) {
             foreach (array('xs', 'sm', 'md', 'lg') as $size) {
                 if (isset($row[$size]) && $row[$size]) {
-                    $grid->addColumnReset($row['column'], $size);
+                    $grid->addColumnReset(($row['column'] -1), $size);
                 }
             }
         }
