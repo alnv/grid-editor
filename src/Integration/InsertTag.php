@@ -17,9 +17,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Class InsertTag provides an insert tag integration for the grids.
  *
+ * Begin a grid by defining an identifier and the to using column set id.
  * {{grid::IDENTIFIER::begin::COLUMNSET_ID}}
+ *
+ * You can also pass the infinite flag. When enabling it you can build endless columns.
  * {{grid::IDENTIFIER::begin::COLUMNSET_ID::infinite}}
+ *
+ * Create a new column without the columnset id.
  * {{grid::IDENTIFIER}}
+ *
+ * Close the grid.
  * {{grid::IDENTIFIER::end}}
  *
  * @package Netzmacht\Bootstrap\Grid\Integration
@@ -83,7 +90,9 @@ class InsertTag implements EventSubscriberInterface
             return;
         }
 
-        if (in_array($event->getParam(1), array('begin', 'walk', 'end'))) {
+        if ($event->getParam(3) === 'infinite' && !in_array($event->getParam(1), array('begin', 'end'))) {
+            $event->setHtml($walker->column());
+        } elseif (in_array($event->getParam(1), array('begin', 'walk', 'end'))) {
             $method = $event->getParam(1);
             $event->setHtml($walker->$method());
         } else {
