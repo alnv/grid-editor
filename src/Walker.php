@@ -28,7 +28,7 @@ class Walker
      *
      * @var int
      */
-    private $index;
+    private $index = 0;
 
     /**
      * If true only the classes are generated.
@@ -38,15 +38,31 @@ class Walker
     private $classesOnly;
 
     /**
+     * Loop over the classes by faking an infinite column set.
+     *
+     * @var bool
+     */
+    private $infinite;
+
+    /**
+     * The infinite index.
+     *
+     * @var int
+     */
+    private $infiniteIndex = 0;
+
+    /**
      * Construct.
      *
      * @param Grid $grid        The grid.
      * @param bool $classesOnly If true only the classes are generated.
+     * @param bool $infinite    If true it fakes an infinite mode. The column resets are parsed differently then.
      */
-    public function __construct(Grid $grid, $classesOnly = false)
+    public function __construct(Grid $grid, $classesOnly = false, $infinite = false)
     {
         $this->grid        = $grid;
         $this->classesOnly = $classesOnly;
+        $this->infinite    = $infinite;
     }
 
     /**
@@ -69,6 +85,7 @@ class Walker
     public function begin()
     {
         $this->index = 0;
+        $this->infiniteIndex = 0;
 
         if ($this->classesOnly) {
             return $this->grid->getColumnResetsAsString($this->index);
@@ -92,6 +109,7 @@ class Walker
     public function column()
     {
         $this->index++;
+        $this->infiniteIndex++;
 
         if (!$this->grid->hasColumn($this->index)) {
             $this->index = 0;
@@ -101,7 +119,7 @@ class Walker
             return $this->grid->getColumnAsString($this->index);
         }
 
-        return sprintf(
+        $buffer = sprintf(
             '%s</div>%s%s<div class="%s">%s',
             PHP_EOL,
             PHP_EOL,
@@ -109,6 +127,8 @@ class Walker
             $this->grid->getColumnAsString($this->index),
             PHP_EOL
         );
+
+        return $buffer;
     }
 
     /**
@@ -168,6 +188,12 @@ class Walker
      */
     public function getColumnResets($tag = null)
     {
-        return $this->grid->getColumnResetsAsString($this->index, $tag);
+        if (!$this->infinite || $this->infiniteIndex === 0 || $this->grid->hasColumn($this->infiniteIndex)) {
+            return $this->grid->getColumnResetsAsString($this->index, $tag);
+        }
+
+        $number = count($this->grid->getColumns());
+
+        return $this->grid->getColumnResetsAsString(($this->infiniteIndex % $number), $tag);
     }
 }
