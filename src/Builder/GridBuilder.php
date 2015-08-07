@@ -69,8 +69,9 @@ class GridBuilder
     {
         $grid = new Grid();
 
-        foreach ($this->columns as $column) {
+        foreach ($this->columns as $index => $column) {
             $grid->addColumn($column->build());
+            $grid->addColumnResets($index, $column->getResets());
         }
 
         return $grid;

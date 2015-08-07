@@ -10,6 +10,7 @@
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
+use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Grid;
 
 /**
@@ -46,6 +47,11 @@ class SemanticHtml5
             $GLOBALS['TL_HOOKS']['parseTemplate'][] = array(
                 'Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5',
                 'hookParseTemplate'
+            );
+
+            $GLOBALS['TL_HOOKS']['getContentElement'][] = array(
+                'Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5',
+                'hookGetContentElement'
             );
 
             $GLOBALS['TL_EVENTS'][GetGridsEvent::NAME][] = get_called_class() . '::getGrids';
@@ -125,6 +131,33 @@ class SemanticHtml5
     }
 
     /**
+     * Add clear fixes for a column.
+     *
+     * @param \ContentModel $model  The content model.
+     * @param string        $buffer The content element output.
+     *
+     * @return string
+     */
+    public function hookGetContentElement($model, $buffer)
+    {
+        if ($model->type === 'semantic_html5'
+            && $model->sh5_tag === 'start'
+            && $model->bootstrap_isGridElement === 'column'
+            && static::$grids[$model->bootstrap_gridRow]
+        ) {
+            $row  = $model->bootstrap_gridRow;
+            $grid = static::$grids[$row];
+
+            // Index is already incremented, so go back
+            $index = (static::$count[$row] - 1);
+
+            $buffer = $grid->getColumnResetsAsString($index) . $buffer;
+        }
+
+        return $buffer;
+    }
+
+    /**
      * Get all grid elements.
      *
      * @param \DataContainer $dataContainer The data container driver.
@@ -193,7 +226,7 @@ SQL;
         // semantic html5 element is marked as beginning of new grid row
         if ($template->bootstrap_isGridElement == 'row') {
             try {
-                static::$grids[$template->id] = Grid::loadFromDatabase($template->bootstrap_grid);
+                static::$grids[$template->id] = Factory::createById($template->bootstrap_grid);
                 static::$count[$template->id] = 0;
             } catch (\InvalidArgumentException $e) {
                 echo $e->getMessage();
@@ -201,7 +234,13 @@ SQL;
                 return;
             }
 
-            $template->class .= ($template->class ? ' ' : '') . 'row';
+            $class = ($template->class ? ' ' : '') . 'row';
+
+            if (static::$grids[$template->id]->getRowClass()) {
+                $class .= ' ' . static::$grids[$template->id]->getRowClass();
+            }
+
+            $template->class .= $class;
         }
     }
 

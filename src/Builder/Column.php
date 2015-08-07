@@ -32,11 +32,25 @@ class Column
     protected $sizes = array();
 
     /**
+     * Custom css class.
+     *
+     * @var string
+     */
+    protected $class = '';
+
+    /**
      * The grid builder.
      *
      * @var GridBuilder
      */
     protected $builder;
+
+    /**
+     * Column resets.
+     *
+     * @var array
+     */
+    private $resets = array();
 
     /**
      * Construct.
@@ -49,20 +63,91 @@ class Column
     }
 
     /**
+     * Get custom css class.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    /**
+     * Set custom css class class.
+     *
+     * @param string $class The css class.
+     *
+     * @return $this
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+
+        return $this;
+    }
+
+    /**
      * Create a column for a device.
      *
      * @param string   $device The device name.
      * @param int      $width  The column width.
      * @param int|null $offset Optional offset.
      * @param int|null $push   Optional push.
+     * @param bool     $resets Reset columns.
      *
      * @return $this
      */
-    public function forDevice($device, $width, $offset = null, $push = null)
+    public function forDevice($device, $width, $offset = null, $push = null, $resets = false)
     {
         $this->sizes[$device] = array('width' => $width, 'offset' => $offset, 'push' => $push);
 
+        if ($resets) {
+            $this->addReset($device);
+        }
+
         return $this;
+    }
+
+    /**
+     * Add a reset for a device.
+     *
+     * @param string $device The device.
+     *
+     * @return $this
+     */
+    public function addReset($device)
+    {
+        if (!in_array($device, $this->resets)) {
+            $this->resets[] = $device;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add reset device sizes.
+     *
+     * @param array $devices The device sizes.
+     *
+     * @return $this
+     */
+    public function addResets(array $devices)
+    {
+        foreach ($devices as $device) {
+            $this->addReset($device);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get column resets.
+     *
+     * @return array
+     */
+    public function getResets()
+    {
+        return $this->resets;
     }
 
     /**
@@ -123,6 +208,10 @@ class Column
                     $classes[] = sprintf('col-%s-%s', $device, $size['push']);
                 }
             }
+        }
+
+        if ($this->class) {
+            $classes[] = $this->class;
         }
 
         return $classes;

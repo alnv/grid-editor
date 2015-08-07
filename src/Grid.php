@@ -9,8 +9,6 @@
 
 namespace Netzmacht\Bootstrap\Grid;
 
-use Netzmacht\Bootstrap\Grid\Builder\GridBuilder;
-
 /**
  * Class Grid stores the grid columns definitions.
  *
@@ -26,11 +24,18 @@ class Grid
     protected $columns = array();
 
     /**
-     * Database created grids.
+     * Column resets after for each column.
      *
      * @var array
      */
-    private static $gridsFromDb = array();
+    private $columnResets = array();
+
+    /**
+     * Custom row class.
+     *
+     * @var string
+     */
+    private $rowClass;
 
     /**
      * Construct.
@@ -52,45 +57,12 @@ class Grid
      * @return Grid
      *
      * @throws \InvalidArgumentException If grid is not defined.
+     *
+     * @deprecated Method get removed. Use the factory instead!
      */
     public static function loadFromDatabase($gridId)
     {
-        if (isset(static::$gridsFromDb[$gridId])) {
-            return static::$gridsFromDb[$gridId];
-        }
-
-        $result = \Database::getInstance()
-            ->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
-            ->limit(1)
-            ->execute($gridId);
-
-        if ($result->numRows < 1) {
-            throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
-        }
-
-        $columns = $result->columns;
-        $sizes   = deserialize($result->sizes, true);
-        $builder = GridBuilder::create();
-
-        for ($i = 0; $i < $columns; $i++) {
-            $column = $builder->addColumn();
-
-            foreach ($sizes as $size) {
-                $key    = 'columnset_' . $size;
-                $values = deserialize($result->$key, true);
-
-                $column->forDevice(
-                    $size,
-                    $values[$i]['width'],
-                    $values[$i]['offset'] ?: null,
-                    $values[$i]['order'] ?: null
-                );
-            }
-        }
-
-        static::$gridsFromDb[$gridId] = $builder->build();
-
-        return static::$gridsFromDb[$gridId];
+        return Factory::createById($gridId);
     }
 
     /**
@@ -159,5 +131,132 @@ class Grid
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * Add column clear fix for a specific column and size.
+     *
+     * @param int    $column The column index.
+     * @param string $size   The grid size.
+     *
+     * @return $this
+     */
+    public function addColumnReset($column, $size)
+    {
+        if (!isset($this->columnResets[$column])) {
+            $this->columnResets[$column] = array();
+        }
+
+        if (!in_array($size, $this->columnResets[$column])) {
+            $this->columnResets[$column][] = $size;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add clear fix for a column.
+     *
+     * @param int   $column The column index.
+     * @param array $sizes  The grid sizes.
+     *
+     * @return $this
+     */
+    public function addColumnResets($column, array $sizes)
+    {
+        if (!isset($this->columnResets[$column])) {
+            $this->columnResets[$column] = $sizes;
+        } else {
+            $this->columnResets[$column] = array_unique(array_merge($this->columnResets[$column], $sizes));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get resets for a column.
+     *
+     * @param int $index The column index.
+     *
+     * @return array
+     */
+    public function getColumnResets($index)
+    {
+        $index = intval($index);
+
+        if (isset($this->columnResets[$index])) {
+            return $this->columnResets[$index];
+        }
+
+        return array();
+    }
+
+    /**
+     * Check if column as a clear fix for a specific size.
+     *
+     * @param int    $column The column index.
+     * @param string $size   The grid column size.
+     *
+     * @return bool
+     */
+    public function hasColumnResetForSize($column, $size)
+    {
+        if (!isset($this->columnResets[$column])) {
+            return false;
+        }
+
+        return in_array($size, $this->columnResets[$column]);
+    }
+
+    /**
+     * Get column resets as string.
+     *
+     * @param int         $index Column index.
+     * @param string|null $tag   Custom html tag. Default divs are created.
+     *
+     * @return string
+     */
+    public function getColumnResetsAsString($index, $tag = null)
+    {
+        $tag = $tag ?: 'div';
+
+        return implode(
+            PHP_EOL,
+            array_map(
+                function ($item) use ($tag) {
+                    return sprintf(
+                        '<%s class="clearfix visible-%s-block"></%s>' . PHP_EOL,
+                        $tag,
+                        $item,
+                        $tag
+                    );
+                },
+                $this->getColumnResets($index)
+            )
+        );
+    }
+
+    /**
+     * Get rowClass.
+     *
+     * @return string
+     */
+    public function getRowClass()
+    {
+        return $this->rowClass;
+    }
+
+    /**
+     * Set rowClass.
+     *
+     * @param string $rowClass RowClass.
+     *
+     * @return $this
+     */
+    public function setRowClass($rowClass)
+    {
+        $this->rowClass = $rowClass;
+
+        return $this;
     }
 }

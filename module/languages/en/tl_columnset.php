@@ -11,10 +11,10 @@
 /**
  * legends
  */
-$GLOBALS['TL_LANG']['tl_columnset']['title_legend'] = 'Title';
+$GLOBALS['TL_LANG']['tl_columnset']['title_legend']     = 'Title';
 $GLOBALS['TL_LANG']['tl_columnset']['columnset_legend'] = 'Column definitions';
 $GLOBALS['TL_LANG']['tl_columnset']['published_legend'] = 'Published';
-
+$GLOBALS['TL_LANG']['tl_columnset']['expert_legend']    = 'Expert settings';
 
 /**
  * fields
@@ -55,6 +55,23 @@ $GLOBALS['TL_LANG']['tl_columnset']['offset'][1] = 'You can define an offset to 
 $GLOBALS['TL_LANG']['tl_columnset']['order'][0] = 'Ordering';
 $GLOBALS['TL_LANG']['tl_columnset']['order'][1] = 'You can use the pull and push beheavior (Bootstrap does not provide this for extra small devices).';
 
+$GLOBALS['TL_LANG']['tl_columnset']['reset'][0] = 'Reset column';
+$GLOBALS['TL_LANG']['tl_columnset']['reset'][1] = 'Force column reset by adding clearfix for the column.';
+
+$GLOBALS['TL_LANG']['tl_columnset']['column'][0] = 'Column';
+$GLOBALS['TL_LANG']['tl_columnset']['column'][1] = 'Column number.';
+
+$GLOBALS['TL_LANG']['tl_columnset']['rowClass'][0] = 'Row class';
+$GLOBALS['TL_LANG']['tl_columnset']['rowClass'][1] = 'Add a custom row class. It\'s added to the <em>row</em> class.';
+
+$GLOBALS['TL_LANG']['tl_columnset']['customClasses'][0] = 'Custom classes';
+$GLOBALS['TL_LANG']['tl_columnset']['customClasses'][1] = 'You can define custom css classes for each row';
+
+$GLOBALS['TL_LANG']['tl_columnset']['column'][0] = 'Column';
+$GLOBALS['TL_LANG']['tl_columnset']['column'][1] = 'Column position';
+
+$GLOBALS['TL_LANG']['tl_columnset']['class'][0] = 'Css class';
+$GLOBALS['TL_LANG']['tl_columnset']['class'][1] = 'Custom css class';
 
 /**
  * values

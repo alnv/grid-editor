@@ -11,6 +11,7 @@ namespace Netzmacht\Bootstrap\Grid\Integration;
 
 use Netzmacht\Bootstrap\Core\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
+use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Grid;
 
 /**
@@ -115,7 +116,7 @@ class Subcolumns
             }
 
             try {
-                $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+                $this->updateSubcolumnsDefinition($gridId, $type);
             } catch (\Exception $e) {
                 // Do not throw the exception in the frontend. If nothing could fetched the fallback is used.
             }
@@ -143,10 +144,8 @@ class Subcolumns
 
         } elseif ($widget->type === 'formcolpart' || $widget->type === 'formcolend') {
             $parent = \FormFieldModel::findByPk($widget->fsc_parent);
-            $type   = $parent->fsc_type;
-            $gridId = $parent->bootstrap_grid;
 
-            $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+            $this->updateSubcolumnsDefinition($parent->bootstrap_grid, $parent->sc_type);
         }
 
         return $widget;
@@ -206,7 +205,7 @@ class Subcolumns
         $model = $event->getModel();
         $grids = $event->getGrids();
 
-        if ($model->type == 'colsetStart' || $model->type == 'submcolumns') {
+        if ($model->type == 'colsetStart' || $model->type == 'subcolumns') {
             $query   = 'SELECT * FROM tl_columnset WHERE published=1 AND columns=? ORDER BY title';
             $columns = $model->sc_type;
             $result  = \Database::getInstance()
@@ -232,19 +231,40 @@ class Subcolumns
     /**
      * Prepare the container by loading the grid and parse it as subcolumns definition.
      *
-     * @param int $gridId The grid id.
+     * @param Grid $grid The grid object.
      *
      * @return array
      */
-    protected function prepareContainer($gridId)
+    protected function prepareContainer(Grid $grid)
     {
         $container = array();
-        $grid      = Grid::loadFromDatabase($gridId);
 
         foreach ($grid->getColumns() as $column) {
             $container[] = array(implode(' ', $column));
         }
 
         return $container;
+    }
+
+    /**
+     * Update the subcolumns definition.
+     *
+     * @param int    $gridId The grid id.
+     * @param string $type   The subcolumns type.
+     *
+     * @return void
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function updateSubcolumnsDefinition($gridId, $type)
+    {
+        $grid = Factory::createById($gridId);
+
+        $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($grid);
+
+        if ($grid->getRowClass()) {
+            $GLOBALS['TL_SUBCL'][static::$name]['scclass'] = 'row ' . $grid->getRowClass();
+        } else {
+            $GLOBALS['TL_SUBCL'][static::$name]['scclass'] = 'row';
+        }
     }
 }
