@@ -147,7 +147,7 @@ class Grid
             $this->columnResets[$column] = array();
         }
 
-        if (!in_array($size, $this->columnResets[$size])) {
+        if (!in_array($size, $this->columnResets[$column])) {
             $this->columnResets[$column][] = $size;
         }
 
@@ -182,6 +182,8 @@ class Grid
      */
     public function getColumnResets($index)
     {
+        $index = intval($index);
+
         if (isset($this->columnResets[$index])) {
             return $this->columnResets[$index];
         }
