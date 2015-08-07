@@ -31,17 +31,38 @@ class Walker
     private $index;
 
     /**
+     * If true only the classes are generated.
+     *
+     * @var bool
+     */
+    private $classesOnly;
+
+    /**
      * Construct.
      *
-     * @param Grid $grid The grid.
+     * @param Grid $grid        The grid.
+     * @param bool $classesOnly If true only the classes are generated.
      */
-    public function __construct(Grid $grid)
+    public function __construct(Grid $grid, $classesOnly = false)
     {
         $this->grid = $grid;
+        $this->grid = $classesOnly;
+    }
+
+    /**
+     * Get the grid.
+     *
+     * @return Grid
+     */
+    public function getGrid()
+    {
+        return $this->grid;
     }
 
     /**
      * Start a new row.
+     *
+     * If classesOnly is set, only the first column is returned.
      *
      * @return string
      */
@@ -49,9 +70,13 @@ class Walker
     {
         $this->index = 0;
 
+        if ($this->classesOnly) {
+            return $this->grid->getColumnResetsAsString($this->index);
+        }
+
         return sprintf(
-            '<div class="row%s">%s%s<div class="%s">%s',
-            $this->grid->getRowClass() ? (' ' . $this->grid->getRowClass()) : '',
+            '%s%s%s<div class="%s">%s',
+            $this->beginRow(),
             PHP_EOL,
             $this->grid->getColumnResetsAsString($this->index),
             $this->grid->getColumnAsString($this->index),
@@ -70,6 +95,10 @@ class Walker
 
         if (!$this->grid->hasColumn($this->index)) {
             $this->index = 0;
+        }
+
+        if ($this->classesOnly) {
+            return $this->grid->getColumnAsString($this->index);
         }
 
         return sprintf(
@@ -91,6 +120,10 @@ class Walker
     {
         $this->index = 0;
 
+        if ($this->classesOnly) {
+            return '';
+        }
+
         return sprintf('%s</div>%s</div>%s', PHP_EOL, PHP_EOL, PHP_EOL);
     }
 
@@ -110,5 +143,31 @@ class Walker
         }
 
         return $this->column();
+    }
+
+    /**
+     * Begin a new row.
+     *
+     * @return string
+     */
+    public function beginRow()
+    {
+        if ($this->classesOnly) {
+            return trim('row ' . $this->grid->getRowClass());
+        }
+
+        return sprintf('<div class="%s">', trim('row ' . $this->grid->getRowClass()));
+    }
+
+    /**
+     * Get the column resets for the current position, always as html.
+     *
+     * @param string|null $tag Custom html tag.
+     *
+     * @return string
+     */
+    public function getColumnResets($tag = null)
+    {
+        return $this->grid->getColumnResetsAsString($this->index, $tag);
     }
 }
