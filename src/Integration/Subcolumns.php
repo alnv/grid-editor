@@ -139,13 +139,14 @@ class Subcolumns
         if ($widget->type === 'formcolstart') {
             $type   = $widget->fsc_type;
             $gridId = $widget->bootstrap_grid;
+            $grid   = Factory::createById($gridId);
 
-            $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($gridId);
+            $GLOBALS['TL_SUBCL'][static::$name]['sets'][$type] = $this->prepareContainer($grid);
 
         } elseif ($widget->type === 'formcolpart' || $widget->type === 'formcolend') {
             $parent = \FormFieldModel::findByPk($widget->fsc_parent);
 
-            $this->updateSubcolumnsDefinition($parent->bootstrap_grid, $parent->sc_type);
+            $this->updateSubcolumnsDefinition($parent->bootstrap_grid, $parent->fsc_type);
         }
 
         return $widget;
