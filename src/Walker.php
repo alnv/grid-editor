@@ -28,7 +28,7 @@ class Walker
      *
      * @var int
      */
-    private $index = 0;
+    private $index = -1;
 
     /**
      * If true only the classes are generated.
@@ -154,7 +154,7 @@ class Walker
      */
     public function walk()
     {
-        if ($this->index == 0) {
+        if ($this->index < 0) {
             return $this->begin();
         }
 
