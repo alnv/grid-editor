@@ -49,7 +49,7 @@ class Walker
      *
      * @var int
      */
-    private $infiniteIndex = 0;
+    private $infiniteIndex = -1;
 
     /**
      * Construct.
@@ -84,8 +84,8 @@ class Walker
      */
     public function begin()
     {
-        $this->index         = 0;
-        $this->infiniteIndex = 0;
+        $this->index = 0;
+        $this->infiniteIndex++;
 
         if ($this->classesOnly) {
             return $this->grid->getColumnAsString($this->index);
@@ -195,5 +195,21 @@ class Walker
         $number = count($this->grid->getColumns());
 
         return $this->grid->getColumnResetsAsString(($this->infiniteIndex % $number), $tag);
+    }
+
+    /**
+     * Get index.
+     *
+     * @param bool $ignoreInfinite
+     *
+     * @return int
+     */
+    public function getIndex($ignoreInfinite = false)
+    {
+        if ($this->infinite && !$ignoreInfinite) {
+            return $this->infiniteIndex;
+        }
+
+        return $this->index;
     }
 }
