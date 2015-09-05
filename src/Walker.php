@@ -88,7 +88,7 @@ class Walker
         $this->infiniteIndex = 0;
 
         if ($this->classesOnly) {
-            return $this->grid->getColumnResetsAsString($this->index);
+            return $this->grid->getColumnAsString($this->index);
         }
 
         return sprintf(
