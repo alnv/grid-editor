@@ -200,7 +200,7 @@ class Walker
     /**
      * Get index.
      *
-     * @param bool $ignoreInfinite
+     * @param bool $ignoreInfinite If true the infinite index is ignored and the regular column index is returned.
      *
      * @return int
      */
