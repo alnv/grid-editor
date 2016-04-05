@@ -69,7 +69,7 @@ class Factory
     /**
      * Fetch the database result.
      *
-     * @param int $gridId The grid id.
+     * @param int  $gridId      The grid id.
      * @param bool $ignoreError If true no exception is thrown. An empty grid is used instead.                    
      *
      * @return \Database\Result
