@@ -70,18 +70,19 @@ class Factory
      * Fetch the database result.
      *
      * @param int $gridId The grid id.
+     * @param bool $ignoreError If true no exception is thrown. An empty grid is used instead.                    
      *
      * @return \Database\Result
      * @throws \InvalidArgumentException If grid is not found.
      */
-    private static function fetchResult($gridId)
+    private static function fetchResult($gridId, $ignoreError = false)
     {
         $result = \Database::getInstance()
             ->prepare('SELECT * FROM tl_columnset WHERE id=? AND published=1')
             ->limit(1)
             ->execute($gridId);
 
-        if ($result->numRows < 1) {
+        if (!$ignoreError && $result->numRows < 1) {
             throw new \InvalidArgumentException(sprintf('Could not find columnset with ID "%s"', $gridId));
         }
 
@@ -128,25 +129,30 @@ class Factory
     /**
      * Create the grid by id.
      *
-     * @param int $gridId The grid id.
+     * @param int  $gridId      The grid id.
+     * @param bool $ignoreError If true no exception is thrown. An empty grid is used instead.
      *
      * @return Grid
      * @throws \InvalidArgumentException If grid is not found.
      */
-    public static function createById($gridId)
+    public static function createById($gridId, $ignoreError = false)
     {
         if (isset(static::$cache[$gridId])) {
             return static::$cache[$gridId];
         }
+        
+        $result = self::fetchResult($gridId, $ignoreError);
+        
+        if ($result) {
+            $builder = GridBuilder::create();
+            $classes = self::prepareClasses($result);
+            $grid    = self::buildGridColumns($builder, $result, $classes);
+            $grid->setRowClass($result->rowClass);
 
-        $result  = self::fetchResult($gridId);
-        $builder = GridBuilder::create();
-        $classes = self::prepareClasses($result);
-
-        $grid = self::buildGridColumns($builder, $result, $classes);
-        $grid->setRowClass($result->rowClass);
-
-        self::buildColumnResets($result, $grid);
+            self::buildColumnResets($result, $grid);
+        } else {
+            $grid = new Grid();
+        }
 
         static::$cache[$gridId] = $grid;
 
