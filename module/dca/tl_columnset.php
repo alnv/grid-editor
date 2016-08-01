@@ -67,7 +67,7 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
             'copy' => array
             (
                 'label'               => &$GLOBALS['TL_LANG']['tl_columnset']['copy'],
-                'href'                => 'act=paste&amp;mode=copy',
+                'href'                => 'act=copy',
                 'icon'                => 'copy.gif',
                 'attributes'          => 'onclick="Backend.getScrollOffset()"'
             ),
