@@ -299,8 +299,9 @@ $colSetTemplate = array
             (
                 'label'            => $GLOBALS['TL_LANG']['tl_columnset']['offset'],
                 'inputType'        => 'select',
-                'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getColumns'),
-                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true, 'chosen' => true),
+                'options_callback' => array('Netzmacht\Bootstrap\Grid\DataContainer\ColumnSet', 'getOffsets'),
+                'reference'        => ['null' => '0 '],
+                'eval'             => array('style' => 'width: 100px;', 'includeBlankOption' => true, 'chosen' => true, 'isAssociative' => false),
             ),
             'order'  => array
             (

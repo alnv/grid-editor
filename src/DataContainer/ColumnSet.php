@@ -248,6 +248,22 @@ class ColumnSet extends \Backend
     }
 
     /**
+     * Get column offsets.
+     *
+     * @return array
+     */
+    public function getOffsets()
+    {
+        $columns = Bootstrap::getConfigVar('grid-editor.columns');
+        $values  = array_merge(
+            ['null'],
+            range(1, $columns)
+        );
+
+        return $values;
+    }
+
+    /**
      * Get column numbers.
      *
      * @param \DataContainer $dataContainer Data container driver.

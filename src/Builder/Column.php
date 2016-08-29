@@ -196,7 +196,7 @@ class Column
                 $classes[] = 'hidden-' . $device;
             }
 
-            if ($size['offset']) {
+            if ($size['offset'] !== null) {
                 $classes[] = sprintf('col-%s-offset-%s', $device, $size['offset']);
             }
 

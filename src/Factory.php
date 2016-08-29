@@ -50,7 +50,7 @@ class Factory
                 $column->forDevice(
                     $size,
                     $values[$i]['width'],
-                    $values[$i]['offset'] ?: null,
+                    ($values[$i]['offset']) ? ($values[$i]['offset'] == 'null' ? 0 : $values[$i]['offset']): null,
                     $values[$i]['order'] ?: null
                 );
 
