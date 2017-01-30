@@ -161,7 +161,7 @@ class ToggleIconCallback extends \Controller
         if (isset($GLOBALS['TL_DCA'][$this->table]['fields'][$this->column]['save_callback'])) {
             foreach ((array) $GLOBALS['TL_DCA'][$this->table]['fields'][$this->column]['save_callback'] as $callback) {
                 $instance = new $callback[0];
-                $instance->$callback[1]($newState, $this);
+                $instance->{$callback[1]}($newState, $this);
             }
         }
 
