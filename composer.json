@@ -1,5 +1,5 @@
 {
-    "name":"contao-bootstrap/grid-editor",
+    "name":"heimrichhannot/grid-editor",
     "description":"Backend grid editor for Contao CMS",
     "keywords":["Contao", "Bootstrap", "Grid", "Grid editor", "Columns"],
     "type":"contao-module",
@@ -20,12 +20,12 @@
         "source":"https://github.com/contao-bootstrap/grid-editor"
     },
     "require":{
-        "php":">=5.3",
-        "contao/core":">=3.2,<3.6-dev",
-        "contao-community-alliance/composer-plugin": "~2.0",
+        "php": "~5.4 || ~7.0",
+        "contao/core-bundle": "^3.5.1 || ~4.1",
+        "contao-community-alliance/composer-plugin": "~2.4 || ~3.0",
         "contao-community-alliance/event-dispatcher": "~1.0",
         "contao-community-alliance/meta-palettes": "~1.5",
-        "contao-bootstrap/core": "~1.0"
+        "contao-bootstrap/core": "dev-contao4"
     },
     "require-dev":{
         "netzmacht/contao-build-tools": "~1.1"
