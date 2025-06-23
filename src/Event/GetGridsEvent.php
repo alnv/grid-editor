@@ -9,14 +9,12 @@
 
 namespace Netzmacht\Bootstrap\Grid\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-
 /**
  * Class GetGridsEvent is emitted when the grid informations in the backend are loaded.
  *
  * @package Netzmacht\Bootstrap\Grid\Event
  */
-class GetGridsEvent extends Event
+class GetGridsEvent
 {
     const NAME = 'bootstrap.get-grid-options';
 
@@ -44,6 +42,7 @@ class GetGridsEvent extends Event
     {
         $this->model = $model;
         $this->grids = new \ArrayObject($grids);
+
     }
 
     /**

@@ -8,8 +8,8 @@
  */
 
 namespace Netzmacht\Bootstrap\Grid\DataContainer;
-
-use Netzmacht\Bootstrap\Core\Bootstrap;
+use Netzmacht\Bootstrap\Grid\Bootstrap;
+use ContaoCommunityAlliance\MetaPalettes\MetaPalettes;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 
 /**
@@ -40,7 +40,7 @@ class ColumnSet extends \Backend
             $model = \ContentModel::findByPK($dataContainer->id);
 
             if ($model->sc_type > 0) {
-                \MetaPalettes::appendFields($dataContainer->table, 'colsetStart', 'colset', array('columnset_id'));
+                MetaPalettes::appendFields($dataContainer->table, 'colsetStart', 'colset', array('columnset_id'));
             }
         } else {
             $model = \ModuleModel::findByPk($dataContainer->id);
@@ -76,7 +76,7 @@ class ColumnSet extends \Backend
         foreach ($sizes as $size) {
             $field = 'columnset_' . $size;
 
-            \MetaPalettes::appendFields('tl_columnset', 'columnset', array($field));
+            MetaPalettes::appendFields('tl_columnset', 'columnset', array($field));
         }
     }
 

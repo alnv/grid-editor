@@ -9,7 +9,7 @@
 
 namespace Netzmacht\Bootstrap\Grid\Integration;
 
-use Netzmacht\Bootstrap\Core\Bootstrap;
+use Netzmacht\Bootstrap\Grid\Bootstrap;
 use Netzmacht\Bootstrap\Grid\Event\GetGridsEvent;
 use Netzmacht\Bootstrap\Grid\Factory;
 use Netzmacht\Bootstrap\Grid\Grid;
@@ -77,9 +77,7 @@ class Subcolumns
      */
     public function hookParseTemplate(\Template $template)
     {
-        if (TL_MODE == 'BE'
-            && $template->getName() == 'be_subcolumns'
-            && Bootstrap::getConfigVar('grid-editor.backend.replace-subcolumns-template')
+        if (TL_MODE == 'BE' && $template->getName() == 'be_subcolumns' && Bootstrap::getConfigVar('grid-editor.backend.replace-subcolumns-template')
         ) {
             $template->setName('be_subcolumns_bootstrap');
         }
