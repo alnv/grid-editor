@@ -85,9 +85,9 @@ $GLOBALS['TL_DCA']['tl_columnset'] = array
                 'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
                 'button_callback'     => function () {
                     $callback = new Netzmacht\Bootstrap\Grid\DataContainer\ToggleIconCallback(
-                        \BackendUser::getInstance(),
-                        \Input::getInstance(),
-                        \Database::getInstance(),
+                        \Contao\BackendUser::getInstance(),
+                        \Contao\Input::getInstance(),
+                        \Contao\Database::getInstance(),
                         'tl_columnset',
                         'published'
                     );

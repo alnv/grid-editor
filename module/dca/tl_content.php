@@ -7,6 +7,8 @@
  * @copyright 2013-2015 netzmacht creative David Molineus
  */
 
+use Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5;
+
 // inject columnset selector for subcolumns
 if(\Netzmacht\Bootstrap\Grid\Integration\Subcolumns::isActive()) {
     $GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'][] =
@@ -52,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['bootstrap_gridRow'] = array
     'label'                   => &$GLOBALS['TL_LANG']['tl_content']['bootstrap_gridRow'],
     'exclude'                 => true,
     'inputType'               => 'select',
-    'options_callback'        => array('Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5', 'getGridElements'),
+    'options_callback'        => array(SemanticHtml5::class, 'getGridElements'),
     'eval'                    => array('mandatory' => true, 'submitOnChange' => true, 'tl_class' => 'w50'),
     'sql'                     => "int(10) unsigned NOT NULL default '0'"
 );

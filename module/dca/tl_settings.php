@@ -7,7 +7,7 @@
  * @copyright 2013-2015 netzmacht creative David Molineus
  */
 
-\MetaPalettes::appendFields('tl_settings', 'bootstrap', array('bootstrap_gridColumns'));
+\ContaoCommunityAlliance\MetaPalettes\MetaPalettes::appendFields('tl_settings', 'bootstrap', array('bootstrap_gridColumns'));
 
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['bootstrap_gridColumns'] = array
