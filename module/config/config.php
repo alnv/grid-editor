@@ -10,18 +10,13 @@
 
 // backend modukle
 $GLOBALS['BE_MOD']['design']['columnset'] = array(
-    'icon' => 'system/modules/bootstrap-grid/assets/icon.png',
     'tables' => array('tl_columnset'),
 );
 
 
 // integrations
-$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array(
-    'Netzmacht\Bootstrap\Grid\Integration\InsertTag',
-    'hookOutputFrontendTemplate'
-);
-
-$GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'Netzmacht\Bootstrap\Grid\Integration\InsertTag';
+// $GLOBALS['TL_HOOKS']['outputFrontendTemplate'][] = array('Netzmacht\Bootstrap\Grid\Integration\InsertTag', 'hookOutputFrontendTemplate');
+// $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'Netzmacht\Bootstrap\Grid\Integration\InsertTag';
 
 \Netzmacht\Bootstrap\Grid\Integration\Subcolumns::setUp();
 \Netzmacht\Bootstrap\Grid\Integration\SemanticHtml5::setUp();
@@ -30,18 +25,18 @@ $GLOBALS['TL_EVENT_SUBSCRIBERS'][] = 'Netzmacht\Bootstrap\Grid\Integration\Inser
 // add separator for colsetPart. It's missing by subcolumns
 $GLOBALS['TL_WRAPPERS']['separator'][] = 'colsetPart';
 
-if(!isset($GLOBALS['TL_CONFIG']['bootstrap_gridColumns'])) {
+if (!isset($GLOBALS['TL_CONFIG']['bootstrap_gridColumns'])) {
     $GLOBALS['TL_CONFIG']['bootstrap_gridColumns'] = 12;
 }
 
 // subcolumns columnset definition
 $GLOBALS['TL_SUBCL']['bootstrap_customizable'] = array
 (
-    'label'        => 'Bootstrap 3 (customizable)', // Label for the selectmenu
-    'scclass'     => 'row', // Class for the wrapping container
-    'inside'     => false, // Are inside containers used?
-    'gap'         => false, // A gap between the columns can be entered in backend
-    'sets'        => array( // provide default column sets as fallback if an database entry is deleted
+    'label' => 'Bootstrap 3 (customizable)', // Label for the selectmenu
+    'scclass' => 'row', // Class for the wrapping container
+    'inside' => false, // Are inside containers used?
+    'gap' => false, // A gap between the columns can be entered in backend
+    'sets' => array( // provide default column sets as fallback if an database entry is deleted
         '1' => array(
             array('col-lg-12'),
         ),
