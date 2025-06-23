@@ -21,7 +21,8 @@
     },
     "require":{
         "contao/core-bundle": "~4.13",
-        "contao-bootstrap/core": "^2.1"
+        "contao-bootstrap/core": "^2.1",
+        "contao-community-alliance/meta-palettes": "^2.1"
     },
     "require-dev":{
         "netzmacht/contao-build-tools": "~1.1"
